@@ -1,0 +1,32 @@
+.App {
+}
+
+.Headline {
+    color: white;
+    font-size: 200%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-bottom: 10px;
+    padding-top: 20px;
+}
+
+.Display {
+}
+
+.ResetButton {
+    position: fixed;
+    top: 0;
+    right: 0;
+    border: 0;
+}
+
+.Disclaimer {
+    color: white;
+    font-size: 85%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+}
