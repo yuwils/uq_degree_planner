@@ -1,7 +1,18 @@
+:root {
+    --height: 5;
+    --cell_length: 16.5vw;
+}
+
 .degreeForm {
     width: 100%;
     padding: 10px 0px 20px 20px;
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.DegreeGrid {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 60rem 60rem;
 }

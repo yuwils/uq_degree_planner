@@ -1,0 +1,22 @@
+.degreeName {
+    font-size: 200%;
+    margin-bottom: 1rem;
+}
+
+.year {
+    font-size: 125%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.DegreeGridElement {
+    background-color: white;
+    margin: 2rem 3rem 2rem 2rem;
+    padding: 3rem 1rem 3rem 1rem;
+    display: grid;
+}
+
+.DegreeGridElement:hover {
+    background-color: aliceblue;
+}

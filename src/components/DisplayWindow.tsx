@@ -18,9 +18,16 @@ const Display = () => {
         setUser(new User());
     }
 
+    const degreeSelected = () => {
+        console.log("clicked!")
+        let newUser: User = new User();
+        newUser.stage = 1;
+        setUser(newUser);
+    }
+
     let displayType: JSX.Element;
     if (user.stage === 0) {
-        displayType = <RequestDegree/>;
+        displayType = <RequestDegree handler = { degreeSelected }/>;
     } else if (user.stage === 1) {
         displayType = <RequestDegreeType/>;
     } else if (user.stage === 2) {
@@ -32,7 +39,7 @@ const Display = () => {
     return (
         <div className = "Display">
         <div className = "InnerDisplay"> {displayType} </div>
-        <div className = "ResetButton" onClick = { resetPlanner }> <ResetButton /> </div>
+        <div className = "ResetButton" onClick = { resetPlanner } > <ResetButton /> </div>
         </div>
     )
 }
