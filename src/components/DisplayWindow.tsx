@@ -27,7 +27,7 @@ const Display = () => {
 
     let displayType: JSX.Element;
     if (user.stage === 0) {
-        displayType = <RequestDegree handler = { degreeSelected }/>;
+        displayType = <RequestDegree user1 = {user } handler = { degreeSelected }/>;
     } else if (user.stage === 1) {
         displayType = <RequestDegreeType/>;
     } else if (user.stage === 2) {

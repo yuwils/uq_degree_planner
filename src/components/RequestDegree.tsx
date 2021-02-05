@@ -12,7 +12,7 @@ const RequestDegree = (props : any) => {
     }
 
     const allDegrees = requestDegrees();
-
+    
     const searchDegrees = (degrees: any, search: string) => {
         //Make a reqeust to get the names and years of all degrees
         let lowerCaseSearch : string = search.toLowerCase();
