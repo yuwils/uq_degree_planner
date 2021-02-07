@@ -14,22 +14,27 @@ public class ApiController {
 	// Wrapping the list into a class is apparently more secure
 	public class DegreeNameWrapper {
 
-		private ArrayList<DegreeName> degrees;
+		private ArrayList<Degree> degrees;
 	
-		public DegreeNameWrapper(ArrayList<DegreeName> degrees) {
+		public DegreeNameWrapper(ArrayList<Degree> degrees) {
 			this.degrees = degrees;
+		}
+
+		public ArrayList<Degree> getDegrees() {
+			return degrees;
 		}
 	}
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	@GetMapping("/allDegrees")
+	@GetMapping("/singleDegrees")
 	public DegreeNameWrapper allDegrees() {
-		ArrayList degrees = new ArrayList<DegreeName>();
-		degrees.add(new DegreeName("code", "name"));
-		DegreeNameWrapper degreeNameWrapper = new DegreeNameWrapper(degrees);
-		return degreeNameWrapper;
+		ArrayList degrees = new ArrayList<Degree>();
+		jdbcTemplate.query("SELECT dcode, name, unit FROM degrees", (rs, rowNum) -> 
+		new Degree(rs.getInt("dcode"), rs.getString("name"), rs.getInt("unit"))).forEach(degree -> degrees.add(degree));
+		DegreeNameWrapper dnw = new DegreeNameWrapper(degrees);
+		return dnw;
 	}
 
 	@GetMapping("/degreeStructures")
