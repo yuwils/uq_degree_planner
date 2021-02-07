@@ -1,26 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./styles/RequestDegree.css";
-import DegreeGridElement from "./DegreeGridElement";
+import SelectionGridElement from "./SelectionGridElement";
 
 const RequestDegree = (props : any) => {
+    const [allDegrees, setAllDegrees] = React.useState([]);
 
     // This function will make a request to the backend
     const requestDegrees = () => {
-        return [{name: "CSSE23100000000000000000000000000000000", year: 2021}, {name: "Test", year: 2021}, {name: "CSSE2310", year: 2021}, 
-        {name: "Test", year: 2021}, {name: "CSSE2310", year: 2021}, {name: "Test", year: 2021},
-        {name: "CSSE2310", year: 2021}, {name: "Test", year: 2021}, {name: "CSSE2310", year: 2021}, {name: "Test", year: 2021}, {name: "TestTest", year: 2021}];
+        console.log('requested')
+        fetch('http://localhost:8080/singleDegrees').then(response => response.json()).then(data => {
+            console.log('degreesRequested');
+            setAllDegrees(data.degrees)});
     }
 
-    const allDegrees = requestDegrees();
-    
+    useEffect(() => {
+        requestDegrees()
+    }, []);
+
     const searchDegrees = (degrees: any, search: string) => {
-        //Make a reqeust to get the names and years of all degrees
         let lowerCaseSearch : string = search.toLowerCase();
         let newDegreeGrid = [];
         for (let i = 0; i < degrees.length; i++) {
             let degreeName: string = degrees[i].name.toLowerCase();
             if (degreeName.includes(lowerCaseSearch)) {
-                newDegreeGrid.push(<DegreeGridElement onClick = { props.handler } name = {degrees[i].name} year = {degrees[i].year} />);
+                newDegreeGrid.push(<SelectionGridElement onClick = { props.handler } name = {degrees[i].name} />);
             }
         }
         return newDegreeGrid;

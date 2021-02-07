@@ -5,6 +5,7 @@ import RequestDegree from './RequestDegree';
 import RequestDegreeType from './RequestDegreeType';
 import RequestMajor from './RequestMajor';
 import Timetable from './DisplayTimetable';
+import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
 
 import './styles/DisplayWindow.css'
@@ -32,6 +33,8 @@ const Display = () => {
         displayType = <RequestDegreeType/>;
     } else if (user.stage === 2) {
         displayType = <RequestMajor/>;
+    } else if (user.stage === 3) {
+        displayType = <RequestNewDegree/>;
     } else {
         displayType = <Timetable/>;
     }
