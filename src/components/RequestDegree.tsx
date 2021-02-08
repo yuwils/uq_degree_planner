@@ -4,18 +4,8 @@ import SelectionGridElement from "./SelectionGridElement";
 
 const RequestDegree = (props : any) => {
     const [allDegrees, setAllDegrees] = React.useState([]);
-
-    // This function will make a request to the backend
-    const requestDegrees = () => {
-        console.log('requested')
-        fetch('http://localhost:8080/singleDegrees').then(response => response.json()).then(data => {
-            console.log('degreesRequested');
-            setAllDegrees(data.degrees)});
-    }
-
-    useEffect(() => {
-        requestDegrees()
-    }, []);
+    const [degree, setDegree] = React.useState("");
+    const [degreeGrid, setDegreeGrid] = React.useState([]);
 
     const searchDegrees = (degrees: any, search: string) => {
         let lowerCaseSearch : string = search.toLowerCase();
@@ -23,13 +13,20 @@ const RequestDegree = (props : any) => {
         for (let i = 0; i < degrees.length; i++) {
             let degreeName: string = degrees[i].name.toLowerCase();
             if (degreeName.includes(lowerCaseSearch)) {
-                newDegreeGrid.push(<SelectionGridElement onClick = { props.handler } name = {degrees[i].name} />);
+                newDegreeGrid.push(<SelectionGridElement user = {props.user} onClick = { props.handler } name = {degrees[i].name} element = {degrees[i].code} />);
             }
         }
         return newDegreeGrid;
     }
-    const [degree, setDegree] = React.useState("");
-    const [degreeGrid, setDegreeGrid] = React.useState(searchDegrees(allDegrees, ""));
+
+    useEffect(() => { 
+        fetch('http://localhost:8080/singleDegrees').then(response => response.json()).then(data => {
+            setAllDegrees(data.degrees)
+            let degrees : any = searchDegrees(data.degrees, "");
+            setDegreeGrid(degrees)
+        })
+        console.log(props.user);
+    }, []);
 
     const handleSubmission = (event: any) => {
         event.preventDefault();
