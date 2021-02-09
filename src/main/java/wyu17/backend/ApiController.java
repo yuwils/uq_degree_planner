@@ -25,6 +25,32 @@ public class ApiController {
 		}
 	}
 
+	public class DegreeMajorsWrapper {
+
+		private ArrayList<DegreeMajors> degrees;
+	
+		public DegreeMajorsWrapper(ArrayList<DegreeMajors> degrees) {
+			this.degrees = degrees;
+		}
+
+		public ArrayList<DegreeMajors> getDegrees() {
+			return degrees;
+		}
+	}
+
+	public class MajorWrapper {
+
+		private ArrayList<DegreeMajors> degrees;
+	
+		public MajorWrapper(ArrayList<DegreeMajors> degrees) {
+			this.degrees = degrees;
+		}
+
+		public ArrayList<DegreeMajors> getDegrees() {
+			return degrees;
+		}
+	}
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -38,8 +64,12 @@ public class ApiController {
 	}
 
 	@GetMapping("/degreeStructures")
-	public DegreeName degreeStructures() {
-		return new DegreeName("dd", "c");
+	public DegreeMajorsWrapper degreeStructures(@RequestParam int code) {
+		ArrayList degrees = new ArrayList<DegreeMajors>();
+		jdbcTemplate.query("SELECT majors, minors, emaj FROM degreeopts WHERE dcode = ?", new Object[] { code }, (rs, rowNum) -> 
+		new DegreeMajors(code, rs.getInt("majors"), rs.getInt("minors"), rs.getInt("emaj"))).forEach(degree -> degrees.add(degree));
+		DegreeMajorsWrapper dmw = new DegreeMajorsWrapper(degrees);
+		return dmw;
 	}
 
 	@GetMapping("/course")
@@ -48,5 +78,15 @@ public class ApiController {
 		jdbcTemplate.query("SELECT title FROM courses WHERE code = ?", new Object[] { code }, (rs, rowNum) -> 
 		new Course(rs.getString("title"))).forEach(course -> courses.add(course));
 		return courses;
+	}
+
+
+	@GetMapping("/majors")
+	public MajorWrapper getMajors(@RequestParam String code, String type) {
+		ArrayList courses = new ArrayList<Course>();
+		jdbcTemplate.query("SELECT mcode, name FROM majors WHERE dcode = ? AND type = ?", new Object[] { code, type }, (rs, rowNum) -> 
+		new DegreeMajor(rs.getString("mcode"), rs.getString("name"))).forEach(course -> courses.add(course));
+		MajorWrapper mwrp = new MajorWrapper(courses);
+		return mwrp;
 	}
 }
