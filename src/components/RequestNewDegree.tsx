@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RequestNewDegree = () => {
+const RequestNewDegree = (props : any) => {
     return (
         <div>
             

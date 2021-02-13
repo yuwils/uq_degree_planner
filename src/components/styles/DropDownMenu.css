@@ -1,0 +1,21 @@
+.DropDownMenu {
+    display: block;
+    margin: 0 auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 1rem 0rem 1rem 0rem;
+    font-size: 125%;
+}
+
+.extension {
+    background-color: grey;
+}
+
+.majorForm {
+    width: 100%;
+    margin-top: -1rem;
+    margin-bottom: 3rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}

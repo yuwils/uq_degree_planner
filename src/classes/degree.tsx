@@ -4,6 +4,9 @@ class Degree {
     majors: number;
     minors: number;
     emaj: number;
+    majorCodes: any;
+    minorCodes: any;
+    emajCodes: any;
 
     constructor() {
         this.code = 0;
@@ -11,6 +14,9 @@ class Degree {
         this.majors = 0;
         this.minors = 0;
         this.emaj = 0;
+        this.majorCodes = {};
+        this.minorCodes = {};
+        this.emajCodes = {};
     }
 }
 

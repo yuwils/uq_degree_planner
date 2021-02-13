@@ -3,7 +3,6 @@ import './App.css';
 import Display from './components/DisplayWindow';
 
 function App() {
-  console.log('rerender')
   return (
     <div className="App">
       <div className = "Headline"> UQ Degree Planner (Beta Testing)</div>

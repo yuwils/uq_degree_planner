@@ -1,0 +1,5 @@
+.RequestDegreeWrapper {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-columns: 60rem 60rem;
+}

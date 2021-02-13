@@ -8,15 +8,17 @@ import RequestMajor from './RequestMajor';
 import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
-
-import './styles/DisplayWindow.css'
+import './styles/DisplayWindow.css';
 
 const Display = () => {
     const [user, setUser] = useStickyState(new User(), 'user');
 
+    console.log("displayrerender");
+
     const resetPlanner = () => {
         console.log("user reset");
         setUser(new User());
+        console.log(user)
     };
 
     const degreeSelected = (user: User, code: number) => {
@@ -35,9 +37,61 @@ const Display = () => {
         newUser.stage = 2;
         newUser.degrees[newUser.degrees.length - 1].majors = majorDetails.majors;
         newUser.degrees[newUser.degrees.length - 1].minors = majorDetails.minors;
-        newUser.degrees[newUser.degrees.length - 1].emaj = majorDetails.emaj;
+        newUser.degrees[newUser.degrees.length - 1].emaj = majorDetails.emajors;
+        console.log(newUser)
         setUser(newUser);
     };
+
+    const majorSelected = (user : User, currentMajorCode : string, newCode : string, newName : string, type : string) => {
+        let newUser : User = JSON.parse(JSON.stringify(user));
+        if (type === 'Major') {
+            if (newUser.degrees[newUser.degrees.length - 1].majorCodes[newCode] !== undefined) {
+                return false;
+            }
+            if (newUser.degrees[newUser.degrees.length - 1].majorCodes[currentMajorCode] !== undefined) {
+                delete newUser.degrees[newUser.degrees.length - 1].majorCodes[currentMajorCode];
+            }
+            newUser.degrees[newUser.degrees.length - 1].majorCodes[newCode] = newName;
+        } else if (type === 'Minor') {
+            if (newUser.degrees[newUser.degrees.length - 1].minorCodes[newCode] !== undefined) {
+                return false;
+            }
+            if (newUser.degrees[newUser.degrees.length - 1].minorCodes[currentMajorCode] !== undefined) {
+                delete newUser.degrees[newUser.degrees.length - 1].minorCodes[currentMajorCode];
+            }
+            newUser.degrees[newUser.degrees.length - 1].minorCodes[newCode] = newName;
+        } else if (type === 'Extended Major') {
+            if (newUser.degrees[newUser.degrees.length - 1].emajCodes[newCode] !== undefined) {
+                return false;
+            }
+            if (newUser.degrees[newUser.degrees.length - 1].emajCodes[currentMajorCode] !== undefined) {
+                delete newUser.degrees[newUser.degrees.length - 1].emajCodes[currentMajorCode];
+            }
+            newUser.degrees[newUser.degrees.length - 1].emajCodes[newCode] = newName;
+        }
+        setUser(newUser);
+        return true;
+    }
+
+    const addExtraDegree = (user : User, addExtraDegree : boolean) => {
+        let newUser : User = JSON.parse(JSON.stringify(user));
+        if (addExtraDegree) {
+            newUser.stage = 0;
+        } else {
+            newUser.stage = 4;
+        }
+        setUser(newUser);
+    }
+
+    const handleMajorFinalisation = (user : User, elements : String) => {
+        let curDegree = user.degrees[user.degrees.length - 1];
+        if(Object.keys(curDegree.majorCodes).length === curDegree.majors && Object.keys(curDegree.minorCodes).length === curDegree.minors &&
+         Object.keys(curDegree.emajCodes).length === curDegree.emaj ) {
+            let newUser : User = JSON.parse(JSON.stringify(user));
+            newUser.stage = 3;
+            setUser(newUser);
+        }
+    }
 
     let displayType: JSX.Element;
     if (user.stage === 0) {
@@ -45,9 +99,10 @@ const Display = () => {
     } else if (user.stage === 1) {
         displayType = <RequestDegreeType user = {user} handler = { degreeTypeSelected }/>;
     } else if (user.stage === 2) {
-        displayType = <RequestMajor/>;
+        console.log(user);
+        displayType = <RequestMajor user = {user} handler = { majorSelected } handler2 = { handleMajorFinalisation }/>;
     } else if (user.stage === 3) {
-        displayType = <RequestNewDegree/>;
+        displayType = <RequestNewDegree user = {user} handler = { addExtraDegree }/>;
     } else {
         displayType = <Timetable/>;
     }

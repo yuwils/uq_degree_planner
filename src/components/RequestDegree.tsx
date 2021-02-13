@@ -13,7 +13,8 @@ const RequestDegree = (props : any) => {
         for (let i = 0; i < degrees.length; i++) {
             let degreeName: string = degrees[i].name.toLowerCase();
             if (degreeName.includes(lowerCaseSearch)) {
-                newDegreeGrid.push(<SelectionGridElement user = {props.user} onClick = { props.handler } name = {degrees[i].name} element = {degrees[i].code} />);
+                newDegreeGrid.push(<SelectionGridElement className = "SelectionGridElement" user = {props.user} 
+                onClick = { props.handler } name = {degrees[i].name} element = {degrees[i].code} />);
             }
         }
         return newDegreeGrid;
@@ -25,7 +26,6 @@ const RequestDegree = (props : any) => {
             let degrees : any = searchDegrees(data.degrees, "");
             setDegreeGrid(degrees)
         })
-        console.log(props.user);
     }, []);
 
     const handleSubmission = (event: any) => {
