@@ -34,3 +34,7 @@
 .majorSelection:hover {
     background-color: aliceblue;
 }
+
+.degreeSelection {
+    margin-left: 1rem;
+}
