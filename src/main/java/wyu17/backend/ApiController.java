@@ -51,6 +51,19 @@ public class ApiController {
 		}
 	}
 
+	public class SectionWrapper {
+
+		private ArrayList<Section> degrees;
+	
+		public SectionWrapper(ArrayList<Section> degrees) {
+			this.degrees = degrees;
+		}
+
+		public ArrayList<Section> getDegrees() {
+			return degrees;
+		}
+	}
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -88,5 +101,14 @@ public class ApiController {
 		new DegreeMajor(rs.getString("mcode"), rs.getString("name"))).forEach(course -> courses.add(course));
 		MajorWrapper mwrp = new MajorWrapper(courses);
 		return mwrp;
+	}
+
+	@GetMapping("/sections")
+	public SectionWrapper getSections(@RequestParam String dcode, String mcode) {
+		ArrayList sections = new ArrayList<Section>();
+		jdbcTemplate.query("SELECT mcode, section, min, max FROM sections WHERE dcode = ? and mcode = ?", new Object[] { dcode, mcode }, (rs, rowNum) -> 
+		new Section(rs.getString("mcode"), rs.getString("section"), rs.getInt("min"), rs.getInt("max"))).forEach(section -> sections.add(section));
+		SectionWrapper swrp = new SectionWrapper(sections);
+		return swrp;
 	}
 }
