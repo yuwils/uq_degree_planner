@@ -64,6 +64,23 @@ public class ApiController {
 		}
 	}
 
+	public class OptionalWrapper {
+		private ArrayList<Course> courses;
+		private Boolean optional = true;
+
+		public OptionalWrapper(ArrayList<Course> courses) {
+			this.courses = courses;
+		}
+
+		public ArrayList<Course> getCourse() {
+			return courses;
+		}
+		
+		public boolean getOptional() {
+			return optional;
+		}
+	}
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -88,8 +105,9 @@ public class ApiController {
 	@GetMapping("/course")
 	public ArrayList<Course> getCourse(@RequestParam String code) {
 		ArrayList courses = new ArrayList<Course>();
-		jdbcTemplate.query("SELECT title FROM courses WHERE code = ?", new Object[] { code }, (rs, rowNum) -> 
-		new Course(rs.getString("title"))).forEach(course -> courses.add(course));
+		jdbcTemplate.query("SELECT title, units, sem1, sem2, summer, prereq, incomp FROM courses WHERE code = ?", new Object[] { code }, (rs, rowNum) -> 
+		new Course(code, rs.getString("title"), rs.getInt("units"), rs.getInt("sem1"), rs.getInt("sem2"), rs.getInt("summer"), 
+		rs.getString("prereq"), rs.getString("incomp"))).forEach(course -> courses.add(course));
 		return courses;
 	}
 
@@ -110,5 +128,37 @@ public class ApiController {
 		new Section(rs.getString("mcode"), rs.getString("section"), rs.getInt("min"), rs.getInt("max"))).forEach(section -> sections.add(section));
 		SectionWrapper swrp = new SectionWrapper(sections);
 		return swrp;
+	}
+
+	@GetMapping("/sectionCodes")
+	public ArrayList<Object> getSectionCodes(@RequestParam String dcode, String mcode, String name) {
+		ArrayList initialCodes = new ArrayList<String>();
+		jdbcTemplate.query("SELECT code FROM sectionCodes WHERE dcode = ? and mcode = ? and section = ?", new Object[] { dcode, mcode, name }, (rs, rowNum) ->
+		rs.getString("code")).forEach(code -> initialCodes.add(code));
+		ArrayList courses = new ArrayList<Object>();
+		for (int i = 0; i < initialCodes.size(); i++) {
+			String code = (String) initialCodes.get(i);
+			// Single course codes will have a length of 8 while optional codes will be > 8
+			if (code.length() != 8) {
+				ArrayList optionComps = new ArrayList<String>();
+				jdbcTemplate.query("SELECT code FROM interX WHERE optionCode = ?", new Object[] { code }, (rs, rowNum) ->
+				rs.getString("code")).forEach(optionCode -> optionComps.add(optionCode));
+				ArrayList optionCourses = new ArrayList<Course>();
+				for (int j = 0; j < optionComps.size(); j++) {
+					ArrayList optionCourse = getCourse((String) optionComps.get(j));
+					if (optionCourse.size() > 0) {
+						optionCourses.add(optionCourse.get(0));
+					}
+				}
+				OptionalWrapper owr = new OptionalWrapper(optionCourses);
+				courses.add((Object) owr);
+			} else {
+				ArrayList courseDesc = getCourse(code);
+				if (courseDesc.size() > 0) {
+					courses.add((Object) courseDesc.get(0));
+				}
+			}
+		}
+		return courses;
 	}
 }
