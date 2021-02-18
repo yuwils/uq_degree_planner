@@ -16,9 +16,8 @@ const Display = () => {
     console.log("displayrerender");
 
     const resetPlanner = () => {
-        console.log("user reset");
         setUser(new User());
-        console.log(user)
+        window.location.reload();
     };
 
     const degreeSelected = (user: User, code: number) => {
@@ -93,6 +92,14 @@ const Display = () => {
         }
     }
 
+    const setSections = (user : User, elements : any) => {
+        let newUser : User = JSON.parse(JSON.stringify(user));
+        let oldArray = [...newUser.sections];
+        newUser.sections = oldArray.concat(elements);
+        newUser.sectionsSelected = true;
+        setUser(newUser);
+    }
+
     let displayType: JSX.Element;
     if (user.stage === 0) {
         displayType = <RequestDegree user = {user} handler = { degreeSelected }/>;
@@ -104,7 +111,7 @@ const Display = () => {
     } else if (user.stage === 3) {
         displayType = <RequestNewDegree user = {user} handler = { addExtraDegree }/>;
     } else {
-        displayType = <Timetable/>;
+        displayType = <Timetable user = {user} setSections = { setSections }/>;
     }
 
     return (

@@ -1,4 +1,7 @@
 .App {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 .Headline {
@@ -11,9 +14,6 @@
     padding-top: 20px;
 }
 
-.Display {
-}
-
 .ResetButton {
     position: fixed;
     top: 0;
@@ -24,9 +24,5 @@
 .Disclaimer {
     color: white;
     font-size: 85%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    position: relative;
-    top: 100%;
+    flex-shrink: 0;
 }
