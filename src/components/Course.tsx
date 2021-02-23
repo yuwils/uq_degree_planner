@@ -67,6 +67,8 @@ const Course = (props : any) => {
                 <div>
                     Incompatible: {props.incomp}
                 </div>
+                <button onClick = {() => props.onClick(props.id, props.sem, props.code, props.dcode, props.mcode, props.name, props.incomp,
+                    props.prereq, props.sem1, props.sem2, props.sum, props.title, props.units)} className = "cancelButton"> </button>
             </div>
         )
     }

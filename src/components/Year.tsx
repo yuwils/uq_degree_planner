@@ -9,9 +9,12 @@ const Year = (props : any) => {
                 Year {props.id}
             </div>
             <div>
-            <Semester user = {props.user} id = {props.id} sem = "Semester One" classes = {props.sem1} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
-            <Semester user = {props.user} id = {props.id} sem = "Semester Two" classes = {props.sem2} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
-            <Semester user = {props.user} id = {props.id} sem = "Summer Semester" classes = {props.sum} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
+            <Semester onClick = {props.onClick} user = {props.user} id = {props.id} sem = "Semester One" 
+                classes = {props.sem1} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
+            <Semester onClick = {props.onClick} user = {props.user} id = {props.id} sem = "Semester Two" 
+                classes = {props.sem2} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
+            <Semester onClick = {props.onClick} user = {props.user} id = {props.id} sem = "Summer Semester" 
+                classes = {props.sum} onDragOver = {props.onDragOver} onDrop = {props.onDrop}/>
             </div>
         </div>
     )

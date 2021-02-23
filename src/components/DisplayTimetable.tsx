@@ -29,8 +29,6 @@ const Timetable = (props : any) => {
             }
         }
         let years : any = JSON.parse(JSON.stringify(props.user.years));
-        console.log(years);
-
         outerLoop2:
         for (let i = 0; i < years.length; i++) {
             let year = years[i];
@@ -43,7 +41,8 @@ const Timetable = (props : any) => {
                 } else {
                     semester = year.sum;
                 }
-                semester.push(new courseClass(e.dataTransfer.getData("code"), e.dataTransfer.getData("title"), e.dataTransfer.getData("units"),
+                semester.push(new courseClass(e.dataTransfer.getData("dcode"), e.dataTransfer.getData("mcode"), e.dataTransfer.getData("name"), 
+                e.dataTransfer.getData("code"), e.dataTransfer.getData("title"), e.dataTransfer.getData("units"),
                 e.dataTransfer.getData("sem1"), e.dataTransfer.getData("sem2"), e.dataTransfer.getData("sum"),
                 e.dataTransfer.getData("prereq"), e.dataTransfer.getData("incomp")));
                 break outerLoop2;
@@ -72,6 +71,41 @@ const Timetable = (props : any) => {
         e.dataTransfer.setData("mcode", mcode);
         e.dataTransfer.setData("name", name);
     };
+
+    const onClick = (id : number, sem : string, code : string, dcode : string, mcode : string, name : string,
+        incomp : string, prereq : string, sem1 : boolean, sem2 : boolean, sum : boolean, title : string, units : number) => {
+        let sections : any = JSON.parse(JSON.stringify(props.user.sections));
+        outerLoop:
+        for (let i = 0; i < sections.length; i++) {
+            let section = sections[i];
+            if (section.dcode === dcode && section.mcode === mcode && section.name === name) {
+                let courses = sections[i].courses;
+                courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+            }
+        }
+        let years : any = JSON.parse(JSON.stringify(props.user.years));
+        outerLoop2:
+        for (let i = 0; i < years.length; i++) {
+            let year = years[i];
+            if (year.id = id) {
+                let semester;
+                if (sem === "Semester One") {
+                    semester = year.sem1;
+                } else if (sem === "Semester Two") {
+                    semester = year.sem2;
+                } else {
+                    semester = year.sum;
+                }
+                for (let j = 0; j < semester.length; j++) {
+                    if (semester[j].code === code) {
+                        semester.splice(j, 1);
+                    }
+                }
+                break outerLoop2;
+            }
+        }
+        props.addToTimetable(props.user, sections, years);
+    }
 
     const getSections = (degreeCode : string, majorIds : any) => {
         let promises : any = [];
@@ -155,7 +189,8 @@ const Timetable = (props : any) => {
         let newYears : any = [];
         for (let i = 0; i < years.length; i++) {
             let year = years[i];
-            newYears.push(<Year id = {year.id} key = {year.id} onDragOver = {onDragOver} onDrop = {onDrop} sem1 = {year.sem1} 
+            console.log(year);
+            newYears.push(<Year id = {year.id} key = {year.id} onClick = {onClick} onDragOver = {onDragOver} onDrop = {onDrop} sem1 = {year.sem1} 
                 sem2 = {year.sem2} sum = {year.sum} user = {props.user}/>);
         }
         return newYears;
@@ -173,7 +208,6 @@ const Timetable = (props : any) => {
         let newYears = existingYears(props.user.years);
         setDisplaySections(newSections);
         setDisplayYears(newYears);
-        console.log(props.user);
     }, [props.user]);
 
     return (
