@@ -8,6 +8,7 @@ import RequestMajor from './RequestMajor';
 import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
+import yearClass from '../classes/yearClass';
 import './styles/DisplayWindow.css';
 
 const Display = () => {
@@ -37,7 +38,6 @@ const Display = () => {
         newUser.degrees[newUser.degrees.length - 1].majors = majorDetails.majors;
         newUser.degrees[newUser.degrees.length - 1].minors = majorDetails.minors;
         newUser.degrees[newUser.degrees.length - 1].emaj = majorDetails.emajors;
-        console.log(newUser)
         setUser(newUser);
     };
 
@@ -92,11 +92,24 @@ const Display = () => {
         }
     }
 
-    const setSections = (user : User, elements : any) => {
+    const initSections = (user : User, elements : any) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
-        let oldArray = [...newUser.sections];
-        newUser.sections = oldArray.concat(elements);
+        newUser.sections = elements;
         newUser.sectionsSelected = true;
+        setUser(newUser);
+    }
+
+    const setYears = (user : User, elements : any) => {
+        let newUser : User = JSON.parse(JSON.stringify(user));
+        newUser.years = elements;
+        setUser(newUser);
+    }
+
+
+    const addToTimetable = (user : User, elements : any, years : any) => {
+        let newUser : User = JSON.parse(JSON.stringify(user));
+        newUser.sections = elements;
+        newUser.years = years;
         setUser(newUser);
     }
 
@@ -106,12 +119,11 @@ const Display = () => {
     } else if (user.stage === 1) {
         displayType = <RequestDegreeType user = {user} handler = { degreeTypeSelected }/>;
     } else if (user.stage === 2) {
-        console.log(user);
         displayType = <RequestMajor user = {user} handler = { majorSelected } handler2 = { handleMajorFinalisation }/>;
     } else if (user.stage === 3) {
         displayType = <RequestNewDegree user = {user} handler = { addExtraDegree }/>;
     } else {
-        displayType = <Timetable user = {user} setSections = { setSections }/>;
+        displayType = <Timetable user = {user} addToTimetable = {addToTimetable} initSections = { initSections } setYears = { setYears }/>;
     }
 
     return (

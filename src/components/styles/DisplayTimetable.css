@@ -1,5 +1,5 @@
 .sections {
-    width: 50%;
+    width: 45%;
     float: left;
     background-color: white;
     height: 100vh;
@@ -7,8 +7,10 @@
 }
 
 .sem-drop-zone {
-    width: 50%;
+    width: 45%;
     background-color: white;
     color: black;
     float: right;
+    height: 100vh;
+    overflow: scroll;
 }

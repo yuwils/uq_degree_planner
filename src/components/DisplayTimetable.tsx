@@ -1,21 +1,76 @@
 import React from 'react';
 import Section from './Section';
 import sectionClass from '../classes/sectionClass';
+import courseClass from '../classes/courseClass';
+import Year from './Year';
 import "./styles/DisplayTimetable.css";
 
 const Timetable = (props : any) => {
     const [displaySections, setDisplaySections] = React.useState([]);
+    const [displayYears, setDisplayYears] = React.useState([]);
+    console.log("timetableRerendered");
 
-    const onDrop = (e : any) => {
-        console.log("ended");
+    //e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string
+    const onDrop = (e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string)  => {
+        e.preventDefault();
+        e.stopPropagation();
+        let sections : any = JSON.parse(JSON.stringify(props.user.sections));
+        outerLoop:
+        for (let i = 0; i < sections.length; i++) {
+            let section = sections[i];
+            if (section.dcode === dcode && section.mcode === mcode && section.name === name) {
+                let courses = sections[i].courses;
+                for (let j = 0; j < courses.length; j++) {
+                    if (courses[j].code === code) {
+                        courses.splice(j, 1);
+                        break outerLoop;
+                    }
+                }
+            }
+        }
+        let years : any = JSON.parse(JSON.stringify(props.user.years));
+        console.log(years);
+
+        outerLoop2:
+        for (let i = 0; i < years.length; i++) {
+            let year = years[i];
+            if (year.id = id) {
+                let semester;
+                if (sem === "Semester One") {
+                    semester = year.sem1;
+                } else if (sem === "Semester Two") {
+                    semester = year.sem2;
+                } else {
+                    semester = year.sum;
+                }
+                semester.push(new courseClass(e.dataTransfer.getData("code"), e.dataTransfer.getData("title"), e.dataTransfer.getData("units"),
+                e.dataTransfer.getData("sem1"), e.dataTransfer.getData("sem2"), e.dataTransfer.getData("sum"),
+                e.dataTransfer.getData("prereq"), e.dataTransfer.getData("incomp")));
+                break outerLoop2;
+            }
+        }
+        props.addToTimetable(props.user, sections, years);
     }
 
     const onDragOver = (e : any) => {
+        e.preventDefault();
+        e.stopPropagation();
         console.log("over");
     };
 
-    const onDragStart = (e : any) => {
-        console.log("started");
+    const onDragStart = (e : any, code : string, title : string, units : number, sem1 : boolean, sem2 : boolean, 
+        sum : boolean, prereq : string, incomp: string, dcode : string, mcode: string, name : string) => {
+        e.dataTransfer.setData("code", code);
+        e.dataTransfer.setData("title", title);
+        e.dataTransfer.setData("units", units);
+        e.dataTransfer.setData("sem1", sem1);
+        e.dataTransfer.setData("sem2", sem2);
+        e.dataTransfer.setData("sum", sum);
+        e.dataTransfer.setData("prereq", prereq);
+        e.dataTransfer.setData("incomp", incomp);
+        e.dataTransfer.setData("dcode", dcode);
+        e.dataTransfer.setData("mcode", mcode);
+        e.dataTransfer.setData("name", name);
     };
 
     const getSections = (degreeCode : string, majorIds : any) => {
@@ -39,7 +94,6 @@ const Timetable = (props : any) => {
 
     const setSectionDegree = async (num : number, sectionClasses : any, sectionComponents : any) => {
         let degree = props.user.degrees[num];
-        console.log(props.user.degrees.length);
         let degreeCode : string = degree.code.toString();
         let majorIds = [];
         let sectionData : any;
@@ -74,30 +128,61 @@ const Timetable = (props : any) => {
                 sectionClasses.push(new sectionClass(degreeCode, sections[j].code, sections[j].name,
                     sections[j].max, sections[j].min, data_2[count]));
                 sectionComponents.push(<Section dcode={degreeCode} mcode={sections[j].code} name={sections[j].name}
-                    max={sections[j].max} min={sections[j].min} data={data_2[count]} onDragStart = {onDragStart}/>);
+                    max={sections[j].max} min={sections[j].min} data={data_2[count]} onDragStart = {onDragStart} user = {props.user}/>);
                 count++;
             }
         }
         if (num < props.user.degrees.length - 1) {
             setSectionDegree(num + 1, sectionClasses, sectionComponents);
         } else {
-            props.setSections(props.user, sectionClasses);
+            props.initSections(props.user, sectionClasses);
             setDisplaySections(sectionComponents);
         }
     }
     
+    const existingSections = (sections : any) => {
+        let newSections : any = [];
+        for (let i = 0; i < sections.length; i++) {
+            let section = sections[i];
+            newSections.push(<Section dcode={section.dcode} mcode={section.mcode} name={section.name}
+                max={section.max} min={section.min} data={section.courses} onDragStart = {onDragStart} key = {section.name} user = {props.user} />);
+        }
+        return newSections;
+    }
+
+
+    const existingYears = (years : any) => {
+        let newYears : any = [];
+        for (let i = 0; i < years.length; i++) {
+            let year = years[i];
+            newYears.push(<Year id = {year.id} key = {year.id} onDragOver = {onDragOver} onDrop = {onDrop} sem1 = {year.sem1} 
+                sem2 = {year.sem2} sum = {year.sum} user = {props.user}/>);
+        }
+        return newYears;
+    }
+
+
     React.useEffect(() => {
-        setSectionDegree(0, [], []);
+        if (!props.user.sectionsSelected) {
+            setSectionDegree(0, [], []);
+        }
     }, []);
+
+    React.useEffect(() => {
+        let newSections = existingSections(props.user.sections);
+        let newYears = existingYears(props.user.years);
+        setDisplaySections(newSections);
+        setDisplayYears(newYears);
+        console.log(props.user);
+    }, [props.user]);
 
     return (
         <div className = "sectionContainer">
             <div className = "sections">
                 {displaySections}
             </div>
-            <div className = 'sem-drop-zone' onDragOver = {e => onDragOver(e)} onDrop ={e => onDrop(e)}>
-                yest
-                <p>d</p>
+            <div className = 'sem-drop-zone'>
+                {displayYears}
             </div>
         </div>
     )

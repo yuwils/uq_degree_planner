@@ -7,7 +7,6 @@ const RequestDegreeType = (props: any) => {
 
     const setMajorHelper = (degrees: any) => {
         let majorGrid : any = [];
-        console.log(degrees)
         for (let i = 0; i < degrees.length; i++) {
             let majorText : string, minorText : string, emajText :string;
             if (degrees[i].majors > 0) {
