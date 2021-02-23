@@ -18,15 +18,13 @@ const Display = () => {
 
     const resetPlanner = () => {
         setUser(new User());
-        window.location.reload();
     };
 
-    const degreeSelected = (user: User, code: number) => {
+    const degreeSelected = (user: User, element: any) => {
         let newUser: User = new User();
         newUser.stage = 1;
         let degreeList = user.degrees.slice();
-        let newDegree = new Degree();
-        newDegree.code = code;
+        let newDegree = new Degree(element.code, element.name, element.units);
         degreeList.push(newDegree);
         newUser.degrees = degreeList;
         setUser(newUser);
@@ -92,9 +90,9 @@ const Display = () => {
         }
     }
 
-    const initSections = (user : User, elements : any) => {
+    const initDegrees = (user : User, elements : any) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
-        newUser.sections = elements;
+        newUser.degrees = elements;
         newUser.sectionsSelected = true;
         setUser(newUser);
     }
@@ -105,10 +103,9 @@ const Display = () => {
         setUser(newUser);
     }
 
-
     const addToTimetable = (user : User, elements : any, years : any) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
-        newUser.sections = elements;
+        newUser.degrees = elements;
         newUser.years = years;
         setUser(newUser);
     }
@@ -123,7 +120,7 @@ const Display = () => {
     } else if (user.stage === 3) {
         displayType = <RequestNewDegree user = {user} handler = { addExtraDegree }/>;
     } else {
-        displayType = <Timetable user = {user} addToTimetable = {addToTimetable} initSections = { initSections } setYears = { setYears }/>;
+        displayType = <Timetable user = {user} addToTimetable = {addToTimetable} initDegrees = { initDegrees } setYears = { setYears }/>;
     }
 
     return (

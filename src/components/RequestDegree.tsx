@@ -14,7 +14,7 @@ const RequestDegree = (props : any) => {
             let degreeName: string = degrees[i].name.toLowerCase();
             if (degreeName.includes(lowerCaseSearch)) {
                 newDegreeGrid.push(<SelectionGridElement className = "SelectionGridElement" user = {props.user} 
-                onClick = { props.handler } name = {degrees[i].name} element = {degrees[i].code} />);
+                onClick = { props.handler } name = {degrees[i].name} element = {degrees[i]} />);
             }
         }
         return newDegreeGrid;
