@@ -54,7 +54,7 @@ const Semester = (props : any) => {
 
     return (
         <div onDragOver = {(e) => onDragOver(e)} onDrop = {(e) => onDrop(e)}>
-            <div className = "year">
+            <div className = "semester">
                 {props.sem}
             </div>
             <div>

@@ -11,6 +11,11 @@
     background-color: white;
     color: black;
     float: right;
-    height: 100vh;
+    max-height: 100vh;
     overflow: scroll;
+}
+
+.addYearButton {
+    width: 100%;
+    height: 5vh;
 }

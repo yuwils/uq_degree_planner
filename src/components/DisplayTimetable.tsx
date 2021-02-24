@@ -2,6 +2,7 @@ import React from 'react';
 import Section from './Section';
 import sectionClass from '../classes/sectionClass';
 import courseClass from '../classes/courseClass';
+import yearClass from '../classes/yearClass';
 import DegreeWrapper from './DegreeWrapper';
 import Year from './Year';
 import "./styles/DisplayTimetable.css";
@@ -17,22 +18,15 @@ const Timetable = (props : any) => {
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
         outerLoop:
         for (let k = 0; k < degrees.length; k++) {
-            console.log(degrees[k].code);
-            console.log(dcode);
             if (degrees[k].code.toString() === dcode) {
                 let degree = degrees[k];
-                console.log("degree");
-                console.log(degree);
                 for (let i = 0; i < degree.sections.length; i++) {
                     let section = degree.sections[i];
                     if (section.mcode === mcode && section.name === name) {
                         let courses = section.courses;
-                        console.log("courses");
-                        console.log(courses);
                         for (let j = 0; j < courses.length; j++) {
                             if (courses[j].code === code) {
                                 courses.splice(j, 1);
-                                console.log("spliced");
                                 break outerLoop;
                             }
                         }
@@ -44,7 +38,7 @@ const Timetable = (props : any) => {
         outerLoop2:
         for (let i = 0; i < years.length; i++) {
             let year = years[i];
-            if (year.id = id) {
+            if (year.id === id) {
                 let semester;
                 if (sem === "Semester One") {
                     semester = year.sem1;
@@ -88,12 +82,8 @@ const Timetable = (props : any) => {
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
         outerLoop:
         for (let k = 0; k < degrees.length; k++) {
-            console.log(degrees[k].code);
-            console.log(dcode);
             if (degrees[k].code.toString() === dcode) {
                 let degree = degrees[k];
-                console.log("degree");
-                console.log(degree);
                 for (let i = 0; i < degree.sections.length; i++) {
                     let section = degree.sections[i];
                     if (section.mcode === mcode && section.name === name) {
@@ -108,7 +98,7 @@ const Timetable = (props : any) => {
         outerLoop2:
         for (let i = 0; i < years.length; i++) {
             let year = years[i];
-            if (year.id = id) {
+            if (year.id === id) {
                 let semester;
                 if (sem === "Semester One") {
                     semester = year.sem1;
@@ -120,9 +110,9 @@ const Timetable = (props : any) => {
                 for (let j = 0; j < semester.length; j++) {
                     if (semester[j].code === code) {
                         semester.splice(j, 1);
+                        break outerLoop2;
                     }
                 }
-                break outerLoop2;
             }
         }
         props.addToTimetable(props.user, degrees, years);
@@ -213,9 +203,28 @@ const Timetable = (props : any) => {
         for (let i = 0; i < years.length; i++) {
             let year = years[i];
             newYears.push(<Year id = {year.id} key = {year.id} onClick = {onClick} onDragOver = {onDragOver} onDrop = {onDrop} sem1 = {year.sem1} 
-                sem2 = {year.sem2} sum = {year.sum} user = {props.user}/>);
+                sem2 = {year.sem2} sum = {year.sum} user = {props.user} finalYear = {year.finalYear} deleteYear = {deleteYear}/>);
         }
         return newYears;
+    }
+
+    const addYear = () => {
+        let newYears = JSON.parse(JSON.stringify(props.user.years));
+        let newId = newYears.length + 1
+        newYears.push(new yearClass([], [], [], newId));
+        if (newYears.length > 1) {
+            newYears[newYears.length - 2].finalYear = false;
+        }
+        props.addToTimetable(props.user, props.user.degrees, newYears);
+    }
+
+    const deleteYear = () => {
+        let newYears = JSON.parse(JSON.stringify(props.user.years));
+        newYears.splice(newYears.length -1, 1);
+        if (newYears.length > 0) {
+            newYears[newYears.length - 1].finalYear = true;
+        }
+        props.addToTimetable(props.user, props.user.degrees, newYears);
     }
 
     React.useEffect(() => {
@@ -238,6 +247,9 @@ const Timetable = (props : any) => {
                 {displayDegrees}
             </div>
             <div className = 'sem-drop-zone'>
+                <button onClick = {addYear} className = "addYearButton">
+                    Add additional year
+                </button>
                 {displayYears}
             </div>
         </div>
