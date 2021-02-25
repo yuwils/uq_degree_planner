@@ -8,6 +8,7 @@ import RequestMajor from './RequestMajor';
 import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
+import majorClass from '../classes/majorClass';
 import yearClass from '../classes/yearClass';
 import './styles/DisplayWindow.css';
 
@@ -39,32 +40,48 @@ const Display = () => {
         setUser(newUser);
     };
 
-    const majorSelected = (user : User, currentMajorCode : string, newCode : string, newName : string, type : string) => {
+    const majorSelected = (user : User, currentMajorCode : string, newCode : string, newName : string, newUnits : number, type : string) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
+        let curCodeIndex = -1;
         if (type === 'Major') {
-            if (newUser.degrees[newUser.degrees.length - 1].majorCodes[newCode] !== undefined) {
-                return false;
+            for (let i = 0; i < newUser.degrees[newUser.degrees.length - 1].majorCodes.length; i++) {
+                if (newUser.degrees[newUser.degrees.length - 1].majorCodes[i].code === newCode) {
+                    return false;
+                }
+                if (newUser.degrees[newUser.degrees.length - 1].majorCodes[i].code === currentMajorCode) {
+                    curCodeIndex = i;
+                }
             }
-            if (newUser.degrees[newUser.degrees.length - 1].majorCodes[currentMajorCode] !== undefined) {
-                delete newUser.degrees[newUser.degrees.length - 1].majorCodes[currentMajorCode];
+            if (curCodeIndex > -1) {
+                newUser.degrees[newUser.degrees.length - 1].majorCodes.splice(curCodeIndex, 1);
             }
-            newUser.degrees[newUser.degrees.length - 1].majorCodes[newCode] = newName;
+            newUser.degrees[newUser.degrees.length - 1].majorCodes.push(new majorClass(newCode, newName, newUnits));
         } else if (type === 'Minor') {
-            if (newUser.degrees[newUser.degrees.length - 1].minorCodes[newCode] !== undefined) {
-                return false;
+            for (let i = 0; i < newUser.degrees[newUser.degrees.length - 1].minorCodes.length; i++) {
+                if (newUser.degrees[newUser.degrees.length - 1].minorCodes[i].code === newCode) {
+                    return false;
+                }
+                if (newUser.degrees[newUser.degrees.length - 1].minorCodes[i].code === currentMajorCode) {
+                    curCodeIndex = i;
+                }
             }
-            if (newUser.degrees[newUser.degrees.length - 1].minorCodes[currentMajorCode] !== undefined) {
-                delete newUser.degrees[newUser.degrees.length - 1].minorCodes[currentMajorCode];
+            if (curCodeIndex > -1) {
+                newUser.degrees[newUser.degrees.length - 1].minorCodes.splice(curCodeIndex, 1);
             }
-            newUser.degrees[newUser.degrees.length - 1].minorCodes[newCode] = newName;
+            newUser.degrees[newUser.degrees.length - 1].minorCodes.push(new majorClass(newCode, newName, newUnits));
         } else if (type === 'Extended Major') {
-            if (newUser.degrees[newUser.degrees.length - 1].emajCodes[newCode] !== undefined) {
-                return false;
+            for (let i = 0; i < newUser.degrees[newUser.degrees.length - 1].emajCodes.length; i++) {
+                if (newUser.degrees[newUser.degrees.length - 1].emajCodes[i].code === newCode) {
+                    return false;
+                }
+                if (newUser.degrees[newUser.degrees.length - 1].emajCodes[i].code === currentMajorCode) {
+                    curCodeIndex = i;
+                }
             }
-            if (newUser.degrees[newUser.degrees.length - 1].emajCodes[currentMajorCode] !== undefined) {
-                delete newUser.degrees[newUser.degrees.length - 1].emajCodes[currentMajorCode];
+            if (curCodeIndex > -1) {
+                newUser.degrees[newUser.degrees.length - 1].emajCodes.splice(curCodeIndex, 1);
             }
-            newUser.degrees[newUser.degrees.length - 1].emajCodes[newCode] = newName;
+            newUser.degrees[newUser.degrees.length - 1].emajCodes.push(new majorClass(newCode, newName, newUnits));
         }
         setUser(newUser);
         return true;
@@ -85,6 +102,10 @@ const Display = () => {
         if(Object.keys(curDegree.majorCodes).length === curDegree.majors && Object.keys(curDegree.minorCodes).length === curDegree.minors &&
          Object.keys(curDegree.emajCodes).length === curDegree.emaj ) {
             let newUser : User = JSON.parse(JSON.stringify(user));
+            newUser.degrees[user.degrees.length - 1].majorCodes.unshift(new majorClass("CORECO" + curDegree.code.toString(), "Core Courses", -1));
+             if (curDegree.majors === 0 && curDegree.minors === 0 && curDegree.emaj === 0) {
+                newUser.degrees[user.degrees.length - 1].majorCodes.push(new majorClass("NOMAJO" + curDegree.code.toString(), "No Major Courses", -1));
+             }
             newUser.stage = 3;
             setUser(newUser);
         }
@@ -94,6 +115,7 @@ const Display = () => {
         let newUser : User = JSON.parse(JSON.stringify(user));
         newUser.degrees = elements;
         newUser.sectionsSelected = true;
+        console.log(newUser);
         setUser(newUser);
     }
 

@@ -41,14 +41,14 @@ const DropDownMenu = (props : any) => {
     }
 
     const handleChange = (event: any) => {
-        console.log(event.target.value)
         let newDegrees: any = searchMajors(fullList, event.target.value);
         setList(newDegrees);
     };
 
     const handleClickBack = (user : User, majorDetails : any) => {
         let currentMajor = major;
-        let exists = props.handler(user, currentMajor, majorDetails.code, majorDetails.name, props.type);
+        console.log(majorDetails);
+        let exists = props.handler(user, currentMajor, majorDetails.code, majorDetails.name, majorDetails.units, props.type);
         if (exists) {
             setDisplay(majorDetails.name);
             setMajor(majorDetails.code);

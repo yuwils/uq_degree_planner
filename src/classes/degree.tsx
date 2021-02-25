@@ -17,9 +17,9 @@ class Degree {
         this.majors = 0;
         this.minors = 0;
         this.emaj = 0;
-        this.majorCodes = {};
-        this.minorCodes = {};
-        this.emajCodes = {};
+        this.majorCodes = [];
+        this.minorCodes = [];
+        this.emajCodes = [];
         this.sections = [];
     }
 }

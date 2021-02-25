@@ -1,18 +1,35 @@
 import React from 'react';
 import Section from './Section';
+import MajorWrapper from './MajorWrapper';
 import './styles/DegreeWrapper.css'
 
 const DegreeWrapper = (props : any) => {
-    const [displaySections, setDisplaySections] = React.useState([]);
+    const [displayMajors, setDisplayMajors] = React.useState([]);
+    const [displayMinors, setDisplayMinors] = React.useState([]);
+    const [displayExtendedMajors, setDisplayExtendedMajors] = React.useState([]);
 
     React.useEffect(() => {
-        let newSections : any = [];
-        for (let i = 0; i < props.sections.length; i++) {
-            let newSection = props.sections[i];
-            newSections.push(<Section dcode={newSection.dcode} mcode={newSection.mcode} name={newSection.name}
-                max={newSection.max} min={newSection.min} data={newSection.courses} onDragStart = {props.onDragStart} user = {props.user}/>);
+        let newMajors : any = [];
+        let newMinors : any = [];
+        let newExtendedMajors : any = [];
+        console.log("major");
+        console.log(props);
+        for (let i = 0; i < props.degree.majorCodes.length; i++) {
+            let major = props.degree.majorCodes[i];
+            newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
+                name = {major.name} units = {major.unit} 
+                sections = {major.sections} onDragStart = {props.onDragStart}
+                user = {props.user}/>);
         }
-        setDisplaySections(newSections);
+        for (let i = 0; i < props.degree.minorCodes.length; i++) {
+
+        }
+        for (let i = 0; i < props.degree.emajCodes.length; i++) {
+
+        }
+        setDisplayMajors(newMajors);
+        setDisplayMinors(newMinors);
+        setDisplayExtendedMajors(newExtendedMajors);
     }, [props.user]);
 
     return (
@@ -24,7 +41,9 @@ const DegreeWrapper = (props : any) => {
                 Units: {props.units}
             </div>
             <div>
-                {displaySections}
+                {displayMajors}
+                {displayMinors}
+                {displayExtendedMajors}
             </div>
         </div>
     )

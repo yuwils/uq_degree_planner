@@ -12,6 +12,33 @@ const Timetable = (props : any) => {
     const [displayYears, setDisplayYears] = React.useState([]);
     console.log("timetableRerendered");
 
+    const addCourse = (degrees : any, remCourse : any) => {
+        for (let k = 0; k < degrees.length; k++) {
+            if (degrees[k].code.toString() === remCourse.dcode) {
+                let degree = degrees[k];
+                for (let i = 0; i < degree.sections.length; i++) {
+                    let section = degree.sections[i];
+                    if (section.mcode === remCourse.mcode && section.name === remCourse.name) {
+                        let courses = section.courses;
+                        let courseSet = false;
+                        for (let z = 0; z < courses.length; z++) {
+                            if (courses[z].optional && courses[z].name.includes(remCourse.code)) {
+                                courses[z].course.push(new courseClass(remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, 
+                                    remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp));
+                                courseSet = true;
+                            }
+                        }
+                        if (!courseSet) {
+                            courses.push(new courseClass(remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, 
+                                remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp));
+                        }
+                        return degrees;
+                    }
+                }
+            }
+        }
+    }
+
     const onDrop = (e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string)  => {
         e.preventDefault();
         e.stopPropagation();
@@ -25,9 +52,20 @@ const Timetable = (props : any) => {
                     if (section.mcode === mcode && section.name === name) {
                         let courses = section.courses;
                         for (let j = 0; j < courses.length; j++) {
-                            if (courses[j].code === code) {
-                                courses.splice(j, 1);
-                                break outerLoop;
+                            let course = courses[j];
+                            if (!course.optional) {
+                                if (courses[j].code === code) {
+                                    courses.splice(j, 1);
+                                    break outerLoop;
+                                }
+                            } else {
+                                let optionalCourses = course.course;
+                                for (let z = 0; z < optionalCourses.length; z++) {
+                                    if (optionalCourses[z].code === code) {
+                                        optionalCourses.splice(z, 1);
+                                        break outerLoop;
+                                    }
+                                }
                             }
                         }
                     }
@@ -88,7 +126,16 @@ const Timetable = (props : any) => {
                     let section = degree.sections[i];
                     if (section.mcode === mcode && section.name === name) {
                         let courses = section.courses;
-                        courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                        let courseSet = false;
+                        for (let z = 0; z < courses.length; z++) {
+                            if (courses[z].optional && courses[z].name.includes(code)) {
+                                courses[z].course.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                                courseSet = true;
+                            }
+                        }
+                        if (!courseSet) {
+                            courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                        }
                         break outerLoop;
                     }
                 }
@@ -138,23 +185,18 @@ const Timetable = (props : any) => {
     }
 
     const setSectionDegree = async (num : number, degreeArray : any, degreeComponents : any) => {
-        let degree = props.user.degrees[num];
+        let degree = degreeArray[num];
         let degreeCode : string = degree.code.toString();
         let majorIds = [];
         let sectionData : any;
-        majorIds.push("CORECO" + degreeCode);
-        if (degree.majors === 0 && degree.minors === 0 && degree.emaj === 0) {
-            majorIds.push("NOMAJO" + degreeCode);
-        } else {
-            for (var key of Object.keys(degree.majorCodes)) {
-                majorIds.push(key);
-            }
-            for (var key of Object.keys(degree.minorCodes)) {
-                majorIds.push(key);
-            }
-            for (var key of Object.keys(degree.emajCodes)) {
-                majorIds.push(key);
-            }
+        for (let i = 0; i < degree.majorCodes.length; i++) {
+            majorIds.push(degree.majorCodes[i].code);
+        }
+        for (let i = 0; i < degree.minorCodes.length; i++) {
+            majorIds.push(degree.minorCodes[i].code);
+        }
+        for (let i = 0; i < degree.emajCodes.length; i++) {
+            majorIds.push(degree.emajCodes[i].code);
         }
         const responses = await Promise.all(getSections(degreeCode, majorIds)
         );
@@ -167,18 +209,32 @@ const Timetable = (props : any) => {
             return response_1.json();
         }));
         let count = 0;
-        let sectionClasses : any = [];
-        let sectionComponents : any = [];
         for (let i = 0; i < sectionData.length; i++) {
             let sections = sectionData[i].degrees;
+            let degreeSection : any = [];
             for (let j = 0; j < sections.length; j++) {
-                sectionClasses.push(new sectionClass(degreeCode, sections[j].code, sections[j].name,
+                degreeSection.push(new sectionClass(degreeCode, sections[j].code, sections[j].name,
                     sections[j].max, sections[j].min, data_2[count]));
                 count++;
             }
+            for (let j = 0; j < degree.majorCodes.length; j++) {
+                if (degree.majorCodes[j].code === majorIds[i]) {
+                    degree.majorCodes[j].sections = degreeSection;
+                }
+            }
+            for (let j = 0; j < degree.minorCodes.length; j++) {
+                if (degree.minorCodes[j].code === majorIds[i]) {
+                    degree.minorCodes[j].sections = degreeSection;
+                }
+            }
+            for (let j = 0; j < degree.emajCodes.length; j++) {
+                if (degree.emajCodes[j].code === majorIds[i]) {
+                    degree.emajCodes[j].sections = degreeSection;
+                }
+            }
         }
-        degreeArray[num].sections = sectionClasses;
-        degreeComponents.push(<DegreeWrapper user = {props.user} dcode = {degreeCode} name = {degree.name} units = {degree.unit} sections = {sectionComponents} />)
+        console.log(degree);
+        degreeComponents.push(<DegreeWrapper user = {props.user} dcode = {degreeCode} name = {degree.name} units = {degree.unit} degree = {degree}/>)
         if (num < props.user.degrees.length - 1) {
             setSectionDegree(num + 1, degreeArray, degreeComponents);
         } else {
@@ -191,7 +247,7 @@ const Timetable = (props : any) => {
         let newDegrees : any = [];
         for (let i = 0; i < degrees.length; i++) {
             let degree = degrees[i];
-            newDegrees.push(<DegreeWrapper dcode = {degree.code} name = {degree.name} units = {degree.unit} sections = {degree.sections} onDragStart = {onDragStart}
+            newDegrees.push(<DegreeWrapper dcode = {degree.code} name = {degree.name} units = {degree.unit} degree = {degree} onDragStart = {onDragStart}
             user = {props.user}/>);
         }
         return newDegrees;
@@ -220,15 +276,21 @@ const Timetable = (props : any) => {
 
     const deleteYear = () => {
         let newYears = JSON.parse(JSON.stringify(props.user.years));
+        let lastYear = newYears[newYears.length -1];
+        let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
+        for (let z = 0; z < lastYear.sem1.length; z++) {
+            let remCourse = lastYear.sem1[z];
+            degrees = addCourse(degrees, remCourse);
+        }
         newYears.splice(newYears.length -1, 1);
         if (newYears.length > 0) {
             newYears[newYears.length - 1].finalYear = true;
         }
-        props.addToTimetable(props.user, props.user.degrees, newYears);
+        props.addToTimetable(props.user, degrees, newYears);
     }
 
     React.useEffect(() => {
-        if (!props.user.sectionsSelected) {
+        if (props.user.sectionsSelected) {
             let newDegrees : any = JSON.parse(JSON.stringify(props.user.degrees));
             setSectionDegree(0, newDegrees, []);
         }
@@ -248,7 +310,7 @@ const Timetable = (props : any) => {
             </div>
             <div className = 'sem-drop-zone'>
                 <button onClick = {addYear} className = "addYearButton">
-                    Add additional year
+                    Add Additional Year
                 </button>
                 {displayYears}
             </div>

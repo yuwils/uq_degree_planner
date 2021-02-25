@@ -2,6 +2,7 @@
     display: block;
     border: solid grey;
     position: relative;
+    padding-top: 1rem;
 }
 
 .yearHeadline {
