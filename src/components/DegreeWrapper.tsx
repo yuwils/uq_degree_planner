@@ -22,10 +22,18 @@ const DegreeWrapper = (props : any) => {
                 user = {props.user}/>);
         }
         for (let i = 0; i < props.degree.minorCodes.length; i++) {
-
+            let major = props.degree.minorCodes[i];
+            newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
+                name = {major.name} units = {major.unit} 
+                sections = {major.sections} onDragStart = {props.onDragStart}
+                user = {props.user}/>);
         }
         for (let i = 0; i < props.degree.emajCodes.length; i++) {
-
+            let major = props.degree.emajCodes[i];
+            newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
+                name = {major.name} units = {major.unit} 
+                sections = {major.sections} onDragStart = {props.onDragStart}
+                user = {props.user}/>);
         }
         setDisplayMajors(newMajors);
         setDisplayMinors(newMinors);

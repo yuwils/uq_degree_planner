@@ -15,7 +15,13 @@ const Timetable = (props : any) => {
     const addCourse = (degrees : any, remCourse : any) => {
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === remCourse.dcode) {
-                let degree = degrees[k];
+                degrees = addCourseToSections(degrees, k, 1, remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, remCourse.title, 
+                    remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp);
+                degrees = addCourseToSections(degrees, k, 2, remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, 
+                    remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp);
+                degrees = addCourseToSections(degrees, k, 3, remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, remCourse.title, remCourse.units, 
+                    remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp);
+                /*
                 for (let i = 0; i < degree.sections.length; i++) {
                     let section = degree.sections[i];
                     if (section.mcode === remCourse.mcode && section.name === remCourse.name) {
@@ -35,41 +41,58 @@ const Timetable = (props : any) => {
                         return degrees;
                     }
                 }
+                */
             }
         }
+        return degrees;
+    }
+
+    const spliceCourseFromSections = (degrees : any, index : number, type : number, mcode : string, name : string, code : string) => {
+        let codes;
+        if (type === 1) {
+            codes = degrees[index].majorCodes;
+        } else if (type === 2) {
+            codes = degrees[index].minorCodes;
+        } else if (type === 3) {
+            codes = degrees[index].emajCodes;
+        }
+        for (let m = 0; m < codes.length; m++) {
+            for (let i = 0; i < codes[m].sections.length; i++) {
+                let section = codes[m].sections[i];
+                if (section.mcode === mcode && section.name === name) {
+                    let courses = section.courses;
+                    for (let j = 0; j < courses.length; j++) {
+                        let course = courses[j];
+                        if (!course.optional) {
+                            if (courses[j].code === code) {
+                                courses.splice(j, 1);
+                                return degrees;
+                            }
+                        } else {
+                            let optionalCourses = course.course;
+                            for (let z = 0; z < optionalCourses.length; z++) {
+                                if (optionalCourses[z].code === code) {
+                                    optionalCourses.splice(z, 1);
+                                    return degrees;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return degrees;
     }
 
     const onDrop = (e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string)  => {
         e.preventDefault();
         e.stopPropagation();
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
-        outerLoop:
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === dcode) {
-                let degree = degrees[k];
-                for (let i = 0; i < degree.sections.length; i++) {
-                    let section = degree.sections[i];
-                    if (section.mcode === mcode && section.name === name) {
-                        let courses = section.courses;
-                        for (let j = 0; j < courses.length; j++) {
-                            let course = courses[j];
-                            if (!course.optional) {
-                                if (courses[j].code === code) {
-                                    courses.splice(j, 1);
-                                    break outerLoop;
-                                }
-                            } else {
-                                let optionalCourses = course.course;
-                                for (let z = 0; z < optionalCourses.length; z++) {
-                                    if (optionalCourses[z].code === code) {
-                                        optionalCourses.splice(z, 1);
-                                        break outerLoop;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                degrees = spliceCourseFromSections(degrees, k, 1, mcode, name, code);
+                degrees = spliceCourseFromSections(degrees, k, 2, mcode, name, code);
+                degrees = spliceCourseFromSections(degrees, k, 3, mcode, name, code);
             }
         }
         let years : any = JSON.parse(JSON.stringify(props.user.years));
@@ -115,30 +138,46 @@ const Timetable = (props : any) => {
         e.dataTransfer.setData("name", name);
     };
 
+    const addCourseToSections = (degrees : any, index : number, type : number, dcode : string, mcode : string, name : string, code : string, title : string,
+        units : number, sem1 : boolean, sem2 : boolean, sum : boolean, prereq : string, incomp : string) => {
+        let codes;
+        if (type === 1) {
+            codes = degrees[index].majorCodes;
+        } else if (type === 2) {
+            codes = degrees[index].minorCodes;
+        } else if (type === 3) {
+            codes = degrees[index].emajCodes;
+        }
+        for (let m = 0; m < codes.length; m++) {
+            for (let i = 0; i < codes[m].sections.length; i++) {
+                let section = codes[m].sections[i];
+                if (section.mcode === mcode && section.name === name) {
+                    let courses = section.courses;
+                    let courseSet = false;
+                    for (let z = 0; z < courses.length; z++) {
+                        if (courses[z].optional && courses[z].name.includes(code)) {
+                            courses[z].course.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                            courseSet = true;
+                        }
+                    }
+                    if (!courseSet) {
+                        courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                    }
+                    return degrees;
+                }
+            }
+        }
+        return degrees;
+    }
+
     const onClick = (id : number, sem : string, code : string, dcode : string, mcode : string, name : string,
         incomp : string, prereq : string, sem1 : boolean, sem2 : boolean, sum : boolean, title : string, units : number) => {
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
-        outerLoop:
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === dcode) {
-                let degree = degrees[k];
-                for (let i = 0; i < degree.sections.length; i++) {
-                    let section = degree.sections[i];
-                    if (section.mcode === mcode && section.name === name) {
-                        let courses = section.courses;
-                        let courseSet = false;
-                        for (let z = 0; z < courses.length; z++) {
-                            if (courses[z].optional && courses[z].name.includes(code)) {
-                                courses[z].course.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
-                                courseSet = true;
-                            }
-                        }
-                        if (!courseSet) {
-                            courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
-                        }
-                        break outerLoop;
-                    }
-                }
+                addCourseToSections(degrees, k, 1, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                addCourseToSections(degrees, k, 2, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                addCourseToSections(degrees, k, 3, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
             }
         }
         let years : any = JSON.parse(JSON.stringify(props.user.years));
@@ -233,7 +272,6 @@ const Timetable = (props : any) => {
                 }
             }
         }
-        console.log(degree);
         degreeComponents.push(<DegreeWrapper user = {props.user} dcode = {degreeCode} name = {degree.name} units = {degree.unit} degree = {degree}/>)
         if (num < props.user.degrees.length - 1) {
             setSectionDegree(num + 1, degreeArray, degreeComponents);
@@ -290,7 +328,7 @@ const Timetable = (props : any) => {
     }
 
     React.useEffect(() => {
-        if (props.user.sectionsSelected) {
+        if (!props.user.sectionsSelected) {
             let newDegrees : any = JSON.parse(JSON.stringify(props.user.degrees));
             setSectionDegree(0, newDegrees, []);
         }

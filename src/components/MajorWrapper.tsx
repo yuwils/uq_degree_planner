@@ -1,5 +1,6 @@
 import React from 'react';
 import Section from './Section';
+import './styles/MajorWrapper.css'
 
 const MajorWrapper = (props : any) => {
     const [displaySections, setDisplaySections] = React.useState([]);
@@ -8,7 +9,6 @@ const MajorWrapper = (props : any) => {
         let newSections : any = [];
         for (let i = 0; i < props.sections.length; i++) {
             let newSection = props.sections[i];
-            console.log(newSection);
             newSections.push(<Section dcode={props.dcode} mcode={props.mcode} name={newSection.name}
             max={newSection.max} min={newSection.min} data={newSection.courses} onDragStart = {props.onDragStart} user = {props.user}/>);
         }
@@ -24,10 +24,10 @@ const MajorWrapper = (props : any) => {
     } else {
         return (
             <div>
-                <div className = "degreeName">
+                <div className = "majorWrapperName">
                     {props.name}
                 </div>
-                <div className = "degreeUnits">
+                <div className = "majorWrapperUnits">
                     Units: {props.units}
                 </div>
                 <div>
