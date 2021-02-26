@@ -67,9 +67,11 @@ public class ApiController {
 	public class OptionalWrapper {
 		private ArrayList<Course> courses;
 		private Boolean optional = true;
+		private String name;
 
-		public OptionalWrapper(ArrayList<Course> courses) {
+		public OptionalWrapper(ArrayList<Course> courses, String name) {
 			this.courses = courses;
+			this.name = name;
 		}
 
 		public ArrayList<Course> getCourse() {
@@ -78,6 +80,10 @@ public class ApiController {
 		
 		public boolean getOptional() {
 			return optional;
+		}
+
+		public String getName() {
+			return name;
 		}
 	}
 
@@ -115,8 +121,8 @@ public class ApiController {
 	@GetMapping("/majors")
 	public MajorWrapper getMajors(@RequestParam String code, String type) {
 		ArrayList courses = new ArrayList<Course>();
-		jdbcTemplate.query("SELECT mcode, name FROM majors WHERE dcode = ? AND type = ?", new Object[] { code, type }, (rs, rowNum) -> 
-		new DegreeMajor(rs.getString("mcode"), rs.getString("name"))).forEach(course -> courses.add(course));
+		jdbcTemplate.query("SELECT mcode, name,units FROM majors WHERE dcode = ? AND type = ?", new Object[] { code, type }, (rs, rowNum) -> 
+		new DegreeMajor(rs.getString("mcode"), rs.getString("name"), rs.getInt("units"))).forEach(course -> courses.add(course));
 		MajorWrapper mwrp = new MajorWrapper(courses);
 		return mwrp;
 	}
@@ -133,7 +139,7 @@ public class ApiController {
 	@GetMapping("/sectionCodes")
 	public ArrayList<Object> getSectionCodes(@RequestParam String dcode, String mcode, String name) {
 		ArrayList initialCodes = new ArrayList<String>();
-		jdbcTemplate.query("SELECT code FROM sectionCodes WHERE dcode = ? and mcode = ? and section = ?", new Object[] { dcode, mcode, name }, (rs, rowNum) ->
+		jdbcTemplate.query("SELECT code FROM sectionCodes WHERE dcode = ? AND mcode = ? AND section = ?", new Object[] { dcode, mcode, name }, (rs, rowNum) ->
 		rs.getString("code")).forEach(code -> initialCodes.add(code));
 		ArrayList courses = new ArrayList<Object>();
 		for (int i = 0; i < initialCodes.size(); i++) {
@@ -150,7 +156,7 @@ public class ApiController {
 						optionCourses.add(optionCourse.get(0));
 					}
 				}
-				OptionalWrapper owr = new OptionalWrapper(optionCourses);
+				OptionalWrapper owr = new OptionalWrapper(optionCourses, code);
 				courses.add((Object) owr);
 			} else {
 				ArrayList courseDesc = getCourse(code);
