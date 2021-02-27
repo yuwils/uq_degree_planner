@@ -37,7 +37,7 @@ const Semester = (props : any) => {
             sem = {props.sem} id = {props.id} />);
         setClasses(newClasses);
         props.onDrop(e, props.id, props.sem, e.dataTransfer.getData("code"), e.dataTransfer.getData("dcode"), 
-            e.dataTransfer.getData("mcode"), e.dataTransfer.getData("name"));
+            e.dataTransfer.getData("mcode"), e.dataTransfer.getData("name"), parseInt(e.dataTransfer.getData("units")));
     }
 
     React.useEffect(() => {

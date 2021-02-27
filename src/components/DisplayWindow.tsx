@@ -9,7 +9,6 @@ import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
 import majorClass from '../classes/majorClass';
-import yearClass from '../classes/yearClass';
 import './styles/DisplayWindow.css';
 
 const Display = () => {
@@ -115,7 +114,6 @@ const Display = () => {
         let newUser : User = JSON.parse(JSON.stringify(user));
         newUser.degrees = elements;
         newUser.sectionsSelected = true;
-        console.log(newUser);
         setUser(newUser);
     }
 

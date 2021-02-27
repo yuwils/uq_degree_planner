@@ -5,6 +5,7 @@ import courseClass from '../classes/courseClass';
 import yearClass from '../classes/yearClass';
 import DegreeWrapper from './DegreeWrapper';
 import Year from './Year';
+import Course from './Course';
 import "./styles/DisplayTimetable.css";
 
 const Timetable = (props : any) => {
@@ -21,33 +22,12 @@ const Timetable = (props : any) => {
                     remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp);
                 degrees = addCourseToSections(degrees, k, 3, remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, remCourse.title, remCourse.units, 
                     remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp);
-                /*
-                for (let i = 0; i < degree.sections.length; i++) {
-                    let section = degree.sections[i];
-                    if (section.mcode === remCourse.mcode && section.name === remCourse.name) {
-                        let courses = section.courses;
-                        let courseSet = false;
-                        for (let z = 0; z < courses.length; z++) {
-                            if (courses[z].optional && courses[z].name.includes(remCourse.code)) {
-                                courses[z].course.push(new courseClass(remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, 
-                                    remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp));
-                                courseSet = true;
-                            }
-                        }
-                        if (!courseSet) {
-                            courses.push(new courseClass(remCourse.dcode, remCourse.mcode, remCourse.name, remCourse.code, 
-                                remCourse.title, remCourse.units, remCourse.sem1, remCourse.sem2, remCourse.sum, remCourse.prereq, remCourse.incomp));
-                        }
-                        return degrees;
-                    }
-                }
-                */
             }
         }
         return degrees;
     }
 
-    const spliceCourseFromSections = (degrees : any, index : number, type : number, mcode : string, name : string, code : string) => {
+    const spliceCourseFromSections = (degrees : any, index : number, type : number, mcode : string, name : string, code : string, units : number) => {
         let codes;
         if (type === 1) {
             codes = degrees[index].majorCodes;
@@ -66,6 +46,9 @@ const Timetable = (props : any) => {
                         if (!course.optional) {
                             if (courses[j].code === code) {
                                 courses.splice(j, 1);
+                                degrees[index].currentUnits = units + parseInt(degrees[index].currentUnits);
+                                codes[m].currentUnits += units;
+                                section.currentUnits += units;
                                 return degrees;
                             }
                         } else {
@@ -73,6 +56,9 @@ const Timetable = (props : any) => {
                             for (let z = 0; z < optionalCourses.length; z++) {
                                 if (optionalCourses[z].code === code) {
                                     optionalCourses.splice(z, 1);
+                                    degrees[index].currentUnits = units + parseInt(degrees[index].currentUnits);
+                                    codes[m].currentUnits += units;
+                                    section.currentUnits += units;
                                     return degrees;
                                 }
                             }
@@ -84,15 +70,20 @@ const Timetable = (props : any) => {
         return degrees;
     }
 
-    const onDrop = (e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string)  => {
+    const onDrop = (e : any, id : number, sem : any, code : string, dcode : string, mcode : string, name : string, units : number)  => {
         e.preventDefault();
         e.stopPropagation();
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === dcode) {
-                degrees = spliceCourseFromSections(degrees, k, 1, mcode, name, code);
-                degrees = spliceCourseFromSections(degrees, k, 2, mcode, name, code);
-                degrees = spliceCourseFromSections(degrees, k, 3, mcode, name, code);
+                if (name === 'ELECTIVE') {
+                    degrees[k].elective = "";
+                    degrees[k].currentUnits = units + parseInt(degrees[k].currentUnits);
+                } else {
+                    degrees = spliceCourseFromSections(degrees, k, 1, mcode, name, code, units);
+                    degrees = spliceCourseFromSections(degrees, k, 2, mcode, name, code, units);
+                    degrees = spliceCourseFromSections(degrees, k, 3, mcode, name, code, units);
+                }
             }
         }
         let years : any = JSON.parse(JSON.stringify(props.user.years));
@@ -163,6 +154,8 @@ const Timetable = (props : any) => {
                     if (!courseSet) {
                         courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
                     }
+                    codes[m].currentUnits -= units;
+                    section.currentUnits -= units;
                     return degrees;
                 }
             }
@@ -175,9 +168,13 @@ const Timetable = (props : any) => {
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === dcode) {
-                addCourseToSections(degrees, k, 1, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
-                addCourseToSections(degrees, k, 2, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
-                addCourseToSections(degrees, k, 3, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                if (name === 'ELECTIVE') {
+                    degrees[k].currentUnits = parseInt(degrees[k].currentUnits) - units;
+                } else {
+                    degrees = addCourseToSections(degrees, k, 1, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                    degrees = addCourseToSections(degrees, k, 2, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                    degrees = addCourseToSections(degrees, k, 3, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
+                }
             }
         }
         let years : any = JSON.parse(JSON.stringify(props.user.years));
@@ -272,7 +269,8 @@ const Timetable = (props : any) => {
                 }
             }
         }
-        degreeComponents.push(<DegreeWrapper user = {props.user} dcode = {degreeCode} name = {degree.name} units = {degree.unit} degree = {degree}/>)
+        degreeComponents.push(<DegreeWrapper user = {props.user} dcode = {degreeCode} name = {degree.name} units = {degree.unit} degree = {degree}
+             onDragStart = {onDragStart} electiveHandler = {handleElective}/>)
         if (num < props.user.degrees.length - 1) {
             setSectionDegree(num + 1, degreeArray, degreeComponents);
         } else {
@@ -285,9 +283,11 @@ const Timetable = (props : any) => {
         let newDegrees : any = [];
         for (let i = 0; i < degrees.length; i++) {
             let degree = degrees[i];
-            newDegrees.push(<DegreeWrapper dcode = {degree.code} name = {degree.name} units = {degree.unit} degree = {degree} onDragStart = {onDragStart}
-            user = {props.user}/>);
+            newDegrees.push(<DegreeWrapper dcode = {degree.code} name = {degree.name} units = {degree.unit} degree = {degree}
+                onDragStart = {onDragStart}
+                user = {props.user} electiveHandler = {handleElective}/>);
         }
+        console.log(props.user);
         return newDegrees;
     }
 
@@ -327,6 +327,27 @@ const Timetable = (props : any) => {
         props.addToTimetable(props.user, degrees, newYears);
     }
 
+    const handleElective = (dcode : string, curFormValue : string) => {
+        let newDegrees = JSON.parse(JSON.stringify(props.user.degrees));
+        console.log(JSON.parse(JSON.stringify(newDegrees)));
+        for (let i = 0; i < newDegrees.length; i++) {
+            if (newDegrees[i].code === dcode) {
+                let degree = newDegrees[i];
+                fetch('http://localhost:8080/course?code=' + curFormValue)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.length === 0) {
+                        degree.elective = "This course could not be found";
+                    } else {
+                        degree.elective = new courseClass(dcode, "ELECTIVE", "ELECTIVE", data[0].code, data[0].title, data[0].units, data[0].sem1,
+                            data[0].sem2, data[0].sum, data[0].prereq, data[0].incomp);
+                    }
+                    props.addToTimetable(props.user, newDegrees, props.user.years);
+                });
+            }
+        }
+    }
+    
     React.useEffect(() => {
         if (!props.user.sectionsSelected) {
             let newDegrees : any = JSON.parse(JSON.stringify(props.user.degrees));

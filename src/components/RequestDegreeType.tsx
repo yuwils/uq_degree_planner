@@ -44,6 +44,9 @@ const RequestDegreeType = (props: any) => {
 
     return (
         <div className = "RequestDegree">
+            <div className = "requestDegreeHeadline">
+                Select Your Degree Type
+            </div>
             <div className = "RequestDegreeWrapper">
                 {majorGrid}
             </div>

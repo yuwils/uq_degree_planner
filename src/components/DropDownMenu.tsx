@@ -47,7 +47,6 @@ const DropDownMenu = (props : any) => {
 
     const handleClickBack = (user : User, majorDetails : any) => {
         let currentMajor = major;
-        console.log(majorDetails);
         let exists = props.handler(user, currentMajor, majorDetails.code, majorDetails.name, majorDetails.units, props.type);
         if (exists) {
             setDisplay(majorDetails.name);

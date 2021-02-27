@@ -3,3 +3,10 @@
     grid-template-columns: auto;
     grid-template-columns: 60rem 60rem;
 }
+
+.requestDegreeHeadline {
+    color: white;
+    font-size: 145%;
+    text-align: center;
+    margin-top: 2rem;
+}

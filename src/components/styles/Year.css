@@ -1,16 +1,19 @@
 .year {
     display: block;
-    border: solid grey;
     position: relative;
-    padding-top: 1rem;
 }
 
 .yearHeadline {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
+    margin: 0 auto;
     font-size: 125%;
     border: none;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.yearHeadline:hover {
+    background-color: darkgray;
 }
 
 .deleteYear {
@@ -18,7 +21,7 @@
     width: 3rem;
     background-color: red;
     position: absolute;
-    top: 0;
+    top: 5%;
     right: 0;
 }
 
@@ -28,10 +31,20 @@
     bottom: 0;
     left: 0;
     right: 0;
-    content: "\274c"; /* use the hex value here... */
+    content: "\274c";
     font-size: 25px; 
     color: transparent;
     text-shadow: 0 0 0 white;
     line-height: 50px;
     text-align: center;
+}
+
+.triangle {
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid grey;
+    float: right;
+    margin-top: 0.5rem;
 }

@@ -8,7 +8,8 @@ class Degree {
     majorCodes: any;
     minorCodes: any;
     emajCodes: any;
-    sections: any;
+    elective: any;
+    currentUnits : number;
 
     constructor(code : number, name : string, unit : number) {
         this.code = code;
@@ -20,7 +21,8 @@ class Degree {
         this.majorCodes = [];
         this.minorCodes = [];
         this.emajCodes = [];
-        this.sections = [];
+        this.elective = "";
+        this.currentUnits = 0;
     }
 }
 

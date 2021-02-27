@@ -1,43 +1,47 @@
 import React from 'react';
 import Section from './Section';
 import MajorWrapper from './MajorWrapper';
+import ElectiveForm from './ElectiveForm';
 import './styles/DegreeWrapper.css'
 
 const DegreeWrapper = (props : any) => {
     const [displayMajors, setDisplayMajors] = React.useState([]);
     const [displayMinors, setDisplayMinors] = React.useState([]);
     const [displayExtendedMajors, setDisplayExtendedMajors] = React.useState([]);
+    const [displayElective, setDisplayElective] = React.useState<any>();
+    const [currentUnits, setCurrentUnits] = React.useState(0);
 
     React.useEffect(() => {
         let newMajors : any = [];
         let newMinors : any = [];
         let newExtendedMajors : any = [];
-        console.log("major");
-        console.log(props);
         for (let i = 0; i < props.degree.majorCodes.length; i++) {
             let major = props.degree.majorCodes[i];
             newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
                 name = {major.name} units = {major.unit} 
                 sections = {major.sections} onDragStart = {props.onDragStart}
-                user = {props.user}/>);
+                user = {props.user} currentUnits = {major.currentUnits}/> );
         }
         for (let i = 0; i < props.degree.minorCodes.length; i++) {
             let major = props.degree.minorCodes[i];
             newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
                 name = {major.name} units = {major.unit} 
                 sections = {major.sections} onDragStart = {props.onDragStart}
-                user = {props.user}/>);
+                user = {props.user} currentUnits = {major.currentUnits}/>);
         }
         for (let i = 0; i < props.degree.emajCodes.length; i++) {
             let major = props.degree.emajCodes[i];
             newMajors.push(<MajorWrapper dcode = {props.dcode} mcode = {major.code} 
                 name = {major.name} units = {major.unit} 
                 sections = {major.sections} onDragStart = {props.onDragStart}
-                user = {props.user}/>);
+                user = {props.user} currentUnits = {major.currentUnits}/>);
         }
+        setDisplayElective(<ElectiveForm onDragStart = {props.onDragStart} dcode = {props.dcode} mcode = {props.mcode} electiveHandler = 
+            {props.electiveHandler} user = {props.user} dName = {props.name} elective = {props.degree.elective} />);
         setDisplayMajors(newMajors);
         setDisplayMinors(newMinors);
         setDisplayExtendedMajors(newExtendedMajors);
+        setCurrentUnits(props.degree.currentUnits);
     }, [props.user]);
 
     return (
@@ -46,12 +50,15 @@ const DegreeWrapper = (props : any) => {
                 {props.name}
             </div>
             <div className = "degreeUnits">
-                Units: {props.units}
+                Current Units: {currentUnits} / {props.units}
             </div>
             <div>
                 {displayMajors}
                 {displayMinors}
                 {displayExtendedMajors}
+            </div>
+            <div>
+                {displayElective}
             </div>
         </div>
     )

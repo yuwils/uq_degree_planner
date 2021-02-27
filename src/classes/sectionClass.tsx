@@ -5,6 +5,7 @@ class sectionClass {
     max: number;
     min: number;
     courses: any;
+    currentUnits : number;
 
     constructor(dcode : String, mcode : String, name : String, max : number, min : number, courses : any) {
         this.dcode = dcode;
@@ -13,6 +14,7 @@ class sectionClass {
         this.max = max;
         this.min = min;
         this.courses = courses;
+        this.currentUnits = 0;
     }
 }
 
