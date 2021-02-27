@@ -37,6 +37,7 @@ const RequestDegreeType = (props: any) => {
     useEffect(() => { 
         fetch('http://localhost:8080/degreeStructures?code=' + props.user.degrees[props.user.degrees.length -1].code.toString()).then(
             response => response.json()).then(data => {
+            console.log(props.user.degrees[props.user.degrees.length -1].code.toString());
             let degrees : any = setMajorHelper(data.degrees);
             setMajorGrid(degrees)
         });

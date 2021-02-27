@@ -7,4 +7,9 @@
 .degreeUnits {
     font-size: 130%;
     text-align: center;
+    margin-bottom: 1rem;
+}
+
+.degreeConstraints {
+    text-align: center;
 }

@@ -10,7 +10,7 @@ const RequestNewDegree = (props : any) => {
                     Select another degree?
                 </div>
                 <div className = "requestExplain"> 
-                    This option is intended for degree structures such as diplomas, Education and dual degrees where different degrees are studied concurrently. 
+                    This option is intended for degree structures such as diplomas, Education and dual degrees in which different degrees are studied concurrently. 
                 </div>
             </div>
             <div className = "requestButtons">

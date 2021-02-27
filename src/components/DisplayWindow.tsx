@@ -24,10 +24,16 @@ const Display = () => {
         let newUser: User = new User();
         newUser.stage = 1;
         let degreeList = user.degrees.slice();
-        let newDegree = new Degree(element.code, element.name, element.units);
-        degreeList.push(newDegree);
-        newUser.degrees = degreeList;
-        setUser(newUser);
+        fetch('http://localhost:8080/degreeConstraint?dcode=' + element.code).then(response => response.json()).then(data => {
+            let constraints : any = {};
+            for (let i = 0; i < data.length; i++) {
+                constraints[data[i]] = false;
+            }
+            let newDegree = new Degree(element.code, element.name, element.units, constraints);
+            degreeList.push(newDegree);
+            newUser.degrees = degreeList;
+            setUser(newUser);
+        })
     };
 
     const degreeTypeSelected = (user : User, majorDetails : any) => {

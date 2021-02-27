@@ -8,7 +8,7 @@ const ElectiveForm = (props : any) => {
 
     const handleSubmission = (event: any) => {
         event.preventDefault();
-        props.electiveHandler(props.dcode, curFormValue.current);
+        props.electiveHandler(props.dcode, curFormValue.current.toUpperCase());
         event.target.reset();
     }
 
@@ -27,6 +27,9 @@ const ElectiveForm = (props : any) => {
             setDisplayElectiveClass("");
         } else {
             setDisplayElectiveClass("This course could not be found");
+            setTimeout(() => {
+                setDisplayElectiveClass("");
+            }, 1000);
         }
     }, [props.user]);
 

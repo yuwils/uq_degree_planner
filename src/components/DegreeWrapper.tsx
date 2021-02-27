@@ -10,6 +10,7 @@ const DegreeWrapper = (props : any) => {
     const [displayExtendedMajors, setDisplayExtendedMajors] = React.useState([]);
     const [displayElective, setDisplayElective] = React.useState<any>();
     const [currentUnits, setCurrentUnits] = React.useState(0);
+    const [constraints, setConstraints] = React.useState<string[]>([]);
 
     React.useEffect(() => {
         let newMajors : any = [];
@@ -42,6 +43,7 @@ const DegreeWrapper = (props : any) => {
         setDisplayMinors(newMinors);
         setDisplayExtendedMajors(newExtendedMajors);
         setCurrentUnits(props.degree.currentUnits);
+        setConstraints(Object.keys(props.degree.constraints));
     }, [props.user]);
 
     return (
@@ -51,6 +53,9 @@ const DegreeWrapper = (props : any) => {
             </div>
             <div className = "degreeUnits">
                 Current Units: {currentUnits} / {props.units}
+            </div>
+            <div className = "degreeConstraints">
+                {constraints}
             </div>
             <div>
                 {displayMajors}

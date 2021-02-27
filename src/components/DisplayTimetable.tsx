@@ -46,7 +46,7 @@ const Timetable = (props : any) => {
                         if (!course.optional) {
                             if (courses[j].code === code) {
                                 courses.splice(j, 1);
-                                degrees[index].currentUnits = units + parseInt(degrees[index].currentUnits);
+                                degrees[index].currentUnits += units;
                                 codes[m].currentUnits += units;
                                 section.currentUnits += units;
                                 return degrees;
@@ -56,7 +56,7 @@ const Timetable = (props : any) => {
                             for (let z = 0; z < optionalCourses.length; z++) {
                                 if (optionalCourses[z].code === code) {
                                     optionalCourses.splice(z, 1);
-                                    degrees[index].currentUnits = units + parseInt(degrees[index].currentUnits);
+                                    degrees[index].currentUnits += units
                                     codes[m].currentUnits += units;
                                     section.currentUnits += units;
                                     return degrees;
@@ -78,7 +78,7 @@ const Timetable = (props : any) => {
             if (degrees[k].code.toString() === dcode) {
                 if (name === 'ELECTIVE') {
                     degrees[k].elective = "";
-                    degrees[k].currentUnits = units + parseInt(degrees[k].currentUnits);
+                    degrees[k].currentUnits += units;
                 } else {
                     degrees = spliceCourseFromSections(degrees, k, 1, mcode, name, code, units);
                     degrees = spliceCourseFromSections(degrees, k, 2, mcode, name, code, units);
@@ -130,7 +130,7 @@ const Timetable = (props : any) => {
     };
 
     const addCourseToSections = (degrees : any, index : number, type : number, dcode : string, mcode : string, name : string, code : string, title : string,
-        units : number, sem1 : boolean, sem2 : boolean, sum : boolean, prereq : string, incomp : string) => {
+        units : number, sem1 : string, sem2 : string, sum : string, prereq : string, incomp : string) => {
         let codes;
         if (type === 1) {
             codes = degrees[index].majorCodes;
@@ -147,13 +147,15 @@ const Timetable = (props : any) => {
                     let courseSet = false;
                     for (let z = 0; z < courses.length; z++) {
                         if (courses[z].optional && courses[z].name.includes(code)) {
-                            courses[z].course.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                            courses[z].course.push(new courseClass(dcode, mcode, name, code, title, units, sem1 === 'true', sem2  === 'true', sum  === 'true', 
+                            prereq, incomp));
                             courseSet = true;
                         }
                     }
                     if (!courseSet) {
-                        courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp));
+                        courses.push(new courseClass(dcode, mcode, name, code, title, units, sem1  === 'true', sem2  === 'true', sum  === 'true', prereq, incomp));
                     }
+                    degrees[index].currentUnits -= units;
                     codes[m].currentUnits -= units;
                     section.currentUnits -= units;
                     return degrees;
@@ -164,12 +166,12 @@ const Timetable = (props : any) => {
     }
 
     const onClick = (id : number, sem : string, code : string, dcode : string, mcode : string, name : string,
-        incomp : string, prereq : string, sem1 : boolean, sem2 : boolean, sum : boolean, title : string, units : number) => {
+        incomp : string, prereq : string, sem1 : string, sem2 : string, sum : string, title : string, units : number) => {
         let degrees : any = JSON.parse(JSON.stringify(props.user.degrees));
         for (let k = 0; k < degrees.length; k++) {
             if (degrees[k].code.toString() === dcode) {
                 if (name === 'ELECTIVE') {
-                    degrees[k].currentUnits = parseInt(degrees[k].currentUnits) - units;
+                    degrees[k].currentUnits -= units;
                 } else {
                     degrees = addCourseToSections(degrees, k, 1, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
                     degrees = addCourseToSections(degrees, k, 2, dcode, mcode, name, code, title, units, sem1, sem2, sum, prereq, incomp);
@@ -203,7 +205,7 @@ const Timetable = (props : any) => {
 
     const getSections = (degreeCode : string, majorIds : any) => {
         let promises : any = [];
-        for (let i = 0; i < majorIds.length; i ++) {
+        for (let i = 0; i < majorIds.length; i++) {
             promises.push(fetch('http://localhost:8080/sections?dcode=' + degreeCode + "&mcode=" + majorIds[i]));
         }
         return promises;
@@ -287,7 +289,6 @@ const Timetable = (props : any) => {
                 onDragStart = {onDragStart}
                 user = {props.user} electiveHandler = {handleElective}/>);
         }
-        console.log(props.user);
         return newDegrees;
     }
 
@@ -320,6 +321,14 @@ const Timetable = (props : any) => {
             let remCourse = lastYear.sem1[z];
             degrees = addCourse(degrees, remCourse);
         }
+        for (let z = 0; z < lastYear.sem2.length; z++) {
+            let remCourse = lastYear.sem2[z];
+            degrees = addCourse(degrees, remCourse);
+        }
+        for (let z = 0; z < lastYear.sum.length; z++) {
+            let remCourse = lastYear.sum[z];
+            degrees = addCourse(degrees, remCourse);
+        }
         newYears.splice(newYears.length -1, 1);
         if (newYears.length > 0) {
             newYears[newYears.length - 1].finalYear = true;
@@ -329,7 +338,6 @@ const Timetable = (props : any) => {
 
     const handleElective = (dcode : string, curFormValue : string) => {
         let newDegrees = JSON.parse(JSON.stringify(props.user.degrees));
-        console.log(JSON.parse(JSON.stringify(newDegrees)));
         for (let i = 0; i < newDegrees.length; i++) {
             if (newDegrees[i].code === dcode) {
                 let degree = newDegrees[i];
@@ -360,6 +368,7 @@ const Timetable = (props : any) => {
         let newYears = existingYears(props.user.years);
         setDisplayDegrees(newDegrees);
         setDisplayYears(newYears);
+        console.log(props.user)
     }, [props.user]);
 
     return (

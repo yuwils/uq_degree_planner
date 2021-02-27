@@ -10,8 +10,9 @@ class Degree {
     emajCodes: any;
     elective: any;
     currentUnits : number;
+    constraints : any;
 
-    constructor(code : number, name : string, unit : number) {
+    constructor(code : number, name : string, unit : number, constraints : any) {
         this.code = code;
         this.name = name;
         this.unit = unit;
@@ -23,6 +24,7 @@ class Degree {
         this.emajCodes = [];
         this.elective = "";
         this.currentUnits = 0;
+        this.constraints = constraints;
     }
 }
 

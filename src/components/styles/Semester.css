@@ -1,8 +1,24 @@
 .semester {
     text-align: center;
-    margin: 1rem 0 1rem 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .buffer {
-    padding-bottom: 10rem;
+    padding-bottom: 5rem;
+}
+
+.errorMessage {
+    font-size: 90%;
+    text-align: center;
+    padding-top: 5rem;
+}
+
+.entireSemesterNotHover {
+    padding-top: 1rem;
+}
+
+.entireSemesterHover {
+    padding-top: 1rem;
+    background-color: lightgrey;
 }

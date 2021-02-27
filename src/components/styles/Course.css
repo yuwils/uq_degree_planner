@@ -8,6 +8,14 @@
     position: relative;
 }
 
+#draggableCourse:hover {
+    background-color: lightcyan;
+}
+
+#draggableCourse {
+    cursor: pointer;
+}
+
 .cancelButton {
     height: 3rem;
     width: 3rem;

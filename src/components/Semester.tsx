@@ -4,17 +4,44 @@ import './styles/Semester.css';
 
 const Semester = (props : any) => {
     const [classes, setClasses] = useState([]);
+    const [errorMessage, setErrorMesssage] = useState("");
+    const [currentClassName, setCurrentClassName] = useState("entireSemesterNotHover");
+
+    const onDragExit = (e : any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentClassName("entireSemesterNotHover");
+    }
 
     const onDragOver = (e : any) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log("testing");
         props.onDragOver(e);
+    }
+
+    const onDragEnter = (e : any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentClassName("entireSemesterHover");
     }
 
     const onDrop = (e : any) => {
         e.preventDefault();
         e.stopPropagation();
+        setCurrentClassName("entireSemesterNotHover");
         let newClasses : any = [];
+        if (e.dataTransfer.getData("sem1") === "true" || e.dataTransfer.getData("sem2") === "true" || e.dataTransfer.getData("sum") === "true" ) {
+            if ((props.sem === "Semester One" && e.dataTransfer.getData("sem1") !== "true") || 
+            (props.sem === "Semester Two" && e.dataTransfer.getData("sem2") !== "true") ||
+            (props.sem === "Summer Semester" && e.dataTransfer.getData("sum") !== "true")) {
+                setErrorMesssage(e.dataTransfer.getData("code") + " cannot be taken in " + props.sem);
+                setTimeout(() => {
+                    setErrorMesssage("");
+                }, 1000);
+                return;
+            }
+        }
         if (classes !== undefined) {
             for (let i = 0; i < props.classes.length; i++) {
                 let newClass = props.classes[i];
@@ -28,8 +55,8 @@ const Semester = (props : any) => {
             }
         }
         newClasses.push(<Course onClick = {props.onClick} code={e.dataTransfer.getData("code")} title={e.dataTransfer.getData("title")} 
-            units={e.dataTransfer.getData("units")}
-            sem1={e.dataTransfer.getData("sem1")} sem2={e.dataTransfer.getData("sem2")} sum ={e.dataTransfer.getData("sum")}  
+            units={parseInt(e.dataTransfer.getData("units"))}
+            sem1={e.dataTransfer.getData("sem1") === 'true'} sem2={e.dataTransfer.getData("sem2") === 'true'} sum ={e.dataTransfer.getData("sum") === 'true'}  
             prereq ={e.dataTransfer.getData("prereq")} incomp ={e.dataTransfer.getData("incomp")} key = {e.dataTransfer.getData("code")}
             dcode = {e.dataTransfer.getData("dcode")}
             mcode = {e.dataTransfer.getData("mcode")}
@@ -53,14 +80,19 @@ const Semester = (props : any) => {
     }, [props.user]);
 
     return (
-        <div onDragOver = {(e) => onDragOver(e)} onDrop = {(e) => onDrop(e)}>
+        <div onDragEnter = {(e) => onDragEnter(e)} onDragExit = {(e) => onDragExit(e)} onDragOver = {(e) => onDragOver(e)} onDrop = {(e) => onDrop(e)}>
             <div className = "semester">
                 {props.sem}
             </div>
-            <div>
-                {classes}
-            </div>
-            <div className = "buffer">
+            <div className = {currentClassName}>
+                <div>
+                    {classes}
+                </div>
+                <div className = "buffer">
+                    <div className = "errorMessage">
+                        {errorMessage}
+                    </div>
+                </div>
             </div>
         </div>
     )
