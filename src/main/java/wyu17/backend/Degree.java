@@ -2,11 +2,11 @@ package wyu17.backend;
 
 public class Degree {
 
-    private final int code;
+    private final String code;
     private final String name;
     private final int units;
 
-	public Degree(int code, String name, int units) {
+	public Degree(String code, String name, int units) {
         this.code = code;
         this.name = name;
         this.units = units;
@@ -16,7 +16,7 @@ public class Degree {
         return name;
     }
 
-    public int getCode()  {
+    public String getCode()  {
         return code;
     }
 

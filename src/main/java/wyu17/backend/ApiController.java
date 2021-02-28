@@ -93,14 +93,23 @@ public class ApiController {
 	@GetMapping("/singleDegrees")
 	public DegreeNameWrapper allDegrees() {
 		ArrayList degrees = new ArrayList<Degree>();
-		jdbcTemplate.query("SELECT dcode, name, unit FROM degrees", (rs, rowNum) -> 
-		new Degree(rs.getInt("dcode"), rs.getString("name"), rs.getInt("unit"))).forEach(degree -> degrees.add(degree));
+		// For now we only allow degrees, since not all of them are read
+		jdbcTemplate.query("SELECT dcode, name, unit FROM degrees where dcode IN (SELECT dcode from includedDegrees)", (rs, rowNum) -> 
+		new Degree(rs.getString("dcode"), rs.getString("name"), rs.getInt("unit"))).forEach(degree -> degrees.add(degree));
 		DegreeNameWrapper dnw = new DegreeNameWrapper(degrees);
 		return dnw;
 	}
 
+	@GetMapping("/degreeConstraint")
+	public ArrayList<String> getConstraint(@RequestParam String dcode) {
+		ArrayList constraints = new ArrayList<String>();
+		jdbcTemplate.query("SELECT constraintColumn FROM constraints WHERE dcode = ?", new Object[] {dcode}, (rs, rowNum) -> 
+		rs.getString("constraintColumn")).forEach(constraint -> constraints.add(constraint));
+		return constraints;
+	}
+
 	@GetMapping("/degreeStructures")
-	public DegreeMajorsWrapper degreeStructures(@RequestParam int code) {
+	public DegreeMajorsWrapper degreeStructures(@RequestParam String code) {
 		ArrayList degrees = new ArrayList<DegreeMajors>();
 		jdbcTemplate.query("SELECT majors, minors, emaj FROM degreeopts WHERE dcode = ?", new Object[] { code }, (rs, rowNum) -> 
 		new DegreeMajors(code, rs.getInt("majors"), rs.getInt("minors"), rs.getInt("emaj"))).forEach(degree -> degrees.add(degree));
