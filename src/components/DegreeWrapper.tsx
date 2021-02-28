@@ -55,7 +55,7 @@ const DegreeWrapper = (props : any) => {
                 Current Units: {currentUnits} / {props.units}
             </div>
             <div className = "degreeConstraints">
-                {constraints}
+                {constraints.map(text => <p> {text} </p>)}
             </div>
             <div>
                 {displayMajors}
