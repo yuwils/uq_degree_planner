@@ -38,10 +38,14 @@ const Display = () => {
 
     const degreeTypeSelected = (user : User, majorDetails : any) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
-        newUser.stage = 2;
         newUser.degrees[newUser.degrees.length - 1].majors = majorDetails.majors;
         newUser.degrees[newUser.degrees.length - 1].minors = majorDetails.minors;
         newUser.degrees[newUser.degrees.length - 1].emaj = majorDetails.emajors;
+        if (majorDetails.majors == 0 && majorDetails.minors == 0 && majorDetails.emajors == 0) {
+            newUser.stage = 3;
+        } else {
+            newUser.stage = 2;
+        }
         setUser(newUser);
     };
 
@@ -94,6 +98,11 @@ const Display = () => {
 
     const addExtraDegree = (user : User, addExtraDegree : boolean) => {
         let newUser : User = JSON.parse(JSON.stringify(user));
+        let curDegree = newUser.degrees[user.degrees.length - 1];
+        curDegree.majorCodes.unshift(new majorClass("CORECO" + curDegree.code.toString(), "Core Courses", -1));
+         if (curDegree.majors === 0 && curDegree.minors === 0 && curDegree.emaj === 0) {
+            curDegree.majorCodes.push(new majorClass("NOMAJO" + curDegree.code.toString(), "No Major Courses", -1));
+         }
         if (addExtraDegree) {
             newUser.stage = 0;
         } else {
@@ -107,10 +116,6 @@ const Display = () => {
         if(Object.keys(curDegree.majorCodes).length === curDegree.majors && Object.keys(curDegree.minorCodes).length === curDegree.minors &&
          Object.keys(curDegree.emajCodes).length === curDegree.emaj ) {
             let newUser : User = JSON.parse(JSON.stringify(user));
-            newUser.degrees[user.degrees.length - 1].majorCodes.unshift(new majorClass("CORECO" + curDegree.code.toString(), "Core Courses", -1));
-             if (curDegree.majors === 0 && curDegree.minors === 0 && curDegree.emaj === 0) {
-                newUser.degrees[user.degrees.length - 1].majorCodes.push(new majorClass("NOMAJO" + curDegree.code.toString(), "No Major Courses", -1));
-             }
             newUser.stage = 3;
             setUser(newUser);
         }
