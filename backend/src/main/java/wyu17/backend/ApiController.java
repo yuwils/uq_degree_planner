@@ -94,7 +94,6 @@ public class ApiController {
 
 	// Retrieves all degrees from the database (currently only retrieves a subset from the includedDegrees, since not all degrees )
 	@GetMapping("/singleDegrees")
-	@CrossOrigin
 	public DegreeNameWrapper allDegrees() {
 		ArrayList degrees = new ArrayList<Degree>();
 		// For now we only allow degrees, since not all of them are ready
