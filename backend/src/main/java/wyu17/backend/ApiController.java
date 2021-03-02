@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @RestController
 public class ApiController {
 
-	// Wrapping the list into a class is apparently more secure
+	// Wrappers for the information returned in the get mapping functions
 	public class DegreeNameWrapper {
 
 		private ArrayList<Degree> degrees;
@@ -90,16 +92,19 @@ public class ApiController {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+	// Retrieves all degrees from the database (currently only retrieves a subset from the includedDegrees, since not all degrees )
 	@GetMapping("/singleDegrees")
+	@CrossOrigin
 	public DegreeNameWrapper allDegrees() {
 		ArrayList degrees = new ArrayList<Degree>();
-		// For now we only allow degrees, since not all of them are read
+		// For now we only allow degrees, since not all of them are ready
 		jdbcTemplate.query("SELECT dcode, name, unit FROM degrees where dcode IN (SELECT dcode from includedDegrees)", (rs, rowNum) -> 
 		new Degree(rs.getString("dcode"), rs.getString("name"), rs.getInt("unit"))).forEach(degree -> degrees.add(degree));
 		DegreeNameWrapper dnw = new DegreeNameWrapper(degrees);
 		return dnw;
 	}
 
+	// Returns the constraints of a degree given a degree code
 	@GetMapping("/degreeConstraint")
 	public ArrayList<String> getConstraint(@RequestParam String dcode) {
 		ArrayList constraints = new ArrayList<String>();
@@ -108,6 +113,7 @@ public class ApiController {
 		return constraints;
 	}
 
+	// Returns the degree options of a degree (e.g how many majors/minors/extended majors can be taken) given its degree code
 	@GetMapping("/degreeStructures")
 	public DegreeMajorsWrapper degreeStructures(@RequestParam String code) {
 		ArrayList degrees = new ArrayList<DegreeMajors>();
@@ -117,6 +123,7 @@ public class ApiController {
 		return dmw;
 	}
 
+	// Returns information about a course given its course code
 	@GetMapping("/course")
 	public ArrayList<Course> getCourse(@RequestParam String code) {
 		ArrayList courses = new ArrayList<Course>();
@@ -136,6 +143,7 @@ public class ApiController {
 		return mwrp;
 	}
 
+	// Given a degree and major gets all sections associated with that major
 	@GetMapping("/sections")
 	public SectionWrapper getSections(@RequestParam String dcode, String mcode) {
 		ArrayList sections = new ArrayList<Section>();
@@ -145,6 +153,7 @@ public class ApiController {
 		return swrp;
 	}
 
+	// Given a degree, major and section gets all the course codes for that section (including alternatives like MATH1051 OR MATH1071)
 	@GetMapping("/sectionCodes")
 	public ArrayList<Object> getSectionCodes(@RequestParam String dcode, String mcode, String name) {
 		ArrayList initialCodes = new ArrayList<String>();
