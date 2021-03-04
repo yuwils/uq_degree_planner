@@ -30,13 +30,13 @@ Then run these commmands to build and start the docker containers:
 
 The website should then be available on http://localhost:3000/.
 
-Note: this will not be very useful without access to the mySql database; you may generate your own, or contact me if you are interested in hosting your own instance. 
+Note: this will not be very useful without access to the mySql database; you may generate your own, or contact wyu17 if you are interested in hosting your own instance. 
 
 ## Planned Features
 
 * Support for a greater range of degrees
 
-* Support for pre-existing credits
+* Support for pre-existing credits (e.g high school credits transferring to university or transferring credit from other degrees)
 
 ## Not Currently PLanned
 
@@ -48,8 +48,8 @@ Note: this will not be very useful without access to the mySql database; you may
 ### Bernado Castilho's dragdroptouch polyfill
 Drag and drop support on mobile devices was enabled using https://github.com/Bernardo-Castilho/dragdroptouch
 
-### Bootstrapped with create-react-app
-https://github.com/facebook/create-react-app
-
 ### Lilac Kapul's UQ Info
 The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo
+
+### Bootstrapped with create-react-app
+https://github.com/facebook/create-react-app
