@@ -21,7 +21,7 @@ The easiest method to host your own instance is using the provided docker-compos
 
 First, clone this repo and install Docker Engine and Docker Compose; instructions can be found here: https://docs.docker.com.
 
-Mac and Windows users will require Docker Desktop, while Linux users will require both Docker Engine and Docker Compose),
+Mac and Windows users will require Docker Desktop, while Linux users will require both Docker Engine and Docker Compose.
 
 Then run these commmands to build and start the docker containers:
 
