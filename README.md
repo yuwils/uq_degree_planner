@@ -19,7 +19,9 @@ Currently hosted using Amazon EC2 at https://www.uqdegreeplanner.work/
 ## How to Host
 The easiest method to host your own instance is using the provided docker-compose file.
 
-After cloning this repo and installing Docker Engine and Docker Compose (instructions can be found here: https://docs.docker.com/; Mac and Windows users will require Docker Desktop, while Linux users will required both Docker Engine and Docker Compose),
+First, clone this repo and install Docker Engine and Docker Compose; instructions can be found here: https://docs.docker.com.
+
+Mac and Windows users will require Docker Desktop, while Linux users will require both Docker Engine and Docker Compose),
 
 Then run these commmands to build and start the docker containers:
 
