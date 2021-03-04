@@ -11,7 +11,7 @@ A website for planning the courses to be taken over the duration of a degree stu
 Currently hosted using Amazon EC2 at https://www.uqdegreeplanner.work/
 
 ## Degree Selection
-![image](https://user-images.githubusercontent.com/62117275/109969631-dc750400-7d3f-11eb-990c-e2cb7cf5f8ff.png)
+![image](https://user-images.githubusercontent.com/62117275/109971603-28c14380-7d42-11eb-87f3-b1d7c3e3c1b4.png)
 
 ## Course Selection
 ![image](https://user-images.githubusercontent.com/62117275/109969855-1d6d1880-7d40-11eb-8d5f-d736124ca5e9.png)
