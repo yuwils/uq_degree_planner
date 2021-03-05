@@ -1,13 +1,17 @@
 .degreeForm {
-    width: 100%;
-    padding: 10px 0px 20px 20px;
-    margin-top: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    width: 95%;
+    height: 2rem;
+    padding: 1rem 1rem 1rem 1rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .DegreeGrid {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 60rem 60rem;
+    grid-template-columns: auto;
 }

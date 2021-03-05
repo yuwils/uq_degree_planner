@@ -9,10 +9,11 @@
     border: none;
     padding: 0.5rem 0 0.5rem 0;
     margin-bottom: 1rem;
+    background-color: lightgrey;
 }
 
-.sectionDetails:hover {
-    background-color: darkgray;
+.sectionDetails:not(:focus):hover {
+    background-color: darkgrey;
 }
 
 .courseNumber {

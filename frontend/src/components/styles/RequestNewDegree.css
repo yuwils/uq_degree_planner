@@ -1,6 +1,6 @@
 .requestHeadline {
     color: white;
-    font-size: 145%;
+    font-size: 155%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,8 @@
 
 .requestExplain {
     display: flex;
-    font-size: 90%;
+    font-size: 110%;
+    text-align: center;
     justify-content: center;
     align-items: center;
     color: white;

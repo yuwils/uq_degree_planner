@@ -62,7 +62,7 @@ const DegreeWrapper = (props : any) => {
                 {displayMinors}
                 {displayExtendedMajors}
             </div>
-            <div>
+            <div className = "displayElective">
                 {displayElective}
             </div>
         </div>

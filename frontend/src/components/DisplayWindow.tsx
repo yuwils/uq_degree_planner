@@ -9,15 +9,17 @@ import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './reset';
 import majorClass from '../classes/majorClass';
+import ResetBox from "./ResetBox";
 import './styles/DisplayWindow.css';
 
 const Display = () => {
     const [user, setUser] = useStickyState(new User(), 'user');
+    const [reset, setReset] = React.useState(false);
 
     console.log("displayrerender");
 
     const resetPlanner = () => {
-        setUser(new User());
+        setReset(true);
     };
 
     const degreeSelected = (user: User, element: any) => {
@@ -141,6 +143,13 @@ const Display = () => {
         setUser(newUser);
     }
 
+    const resetHandler = (resetBox : boolean) => {
+        if (resetBox) {
+            setUser(new User());
+        } 
+        setReset(false);
+    }
+
     let displayType: JSX.Element;
     if (user.stage === 0) {
         displayType = <RequestDegree user = {user} handler = { degreeSelected }/>;
@@ -154,12 +163,21 @@ const Display = () => {
         displayType = <Timetable user = {user} addToTimetable = {addToTimetable} initDegrees = { initDegrees } setYears = { setYears }/>;
     }
 
-    return (
-        <div className = "Display">
-        <div className = "InnerDisplay"> {displayType} </div>
-        <div className = "ResetButton" onClick = { resetPlanner } > <ResetButton /> </div>
-        </div>
-    )
+    if (reset) {
+        return (
+            <div className = "Display">
+            <div className = "InnerDisplay"> {displayType} </div>
+            <div className = "ResetBox"> <ResetBox handler = { resetHandler }/> </div>
+            </div>
+        )
+    } else {
+        return (
+            <div className = "Display">
+            <div className = "InnerDisplay"> {displayType} </div>
+            <div className = "ResetButton" onClick = { resetPlanner } > <ResetButton /> </div>
+            </div>
+        )
+    }
 }
 
 export default Display;

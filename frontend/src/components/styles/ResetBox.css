@@ -1,0 +1,21 @@
+.resetBox {
+    position: fixed;
+    width: 500px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -250px;
+    background-color: rgba(47,3,61,255);
+    color: white;
+    border: solid grey;
+    font-size: 120%;
+    text-align: center;
+}
+
+.resetBoxButton {
+    padding: 1rem 3rem 1rem 3rem;
+    margin-top: 1rem;
+    margin-left: 2rem;
+    background-color: lightgrey;
+}

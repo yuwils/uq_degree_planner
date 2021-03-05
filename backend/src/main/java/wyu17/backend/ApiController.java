@@ -92,12 +92,12 @@ public class ApiController {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	// Retrieves all degrees from the database (currently only retrieves a subset from the includedDegrees, since not all degrees )
+	// Retrieves all degrees from the database (currently only retrieves a subset from the includedDegrees table, since not all degrees have been implemented )
 	@GetMapping("/singleDegrees")
 	public DegreeNameWrapper allDegrees() {
 		ArrayList degrees = new ArrayList<Degree>();
 		// For now we only allow degrees, since not all of them are ready
-		jdbcTemplate.query("SELECT dcode, name, unit FROM degrees where dcode IN (SELECT dcode from includedDegrees)", (rs, rowNum) -> 
+		jdbcTemplate.query("SELECT dcode, name, unit FROM includedDegrees", (rs, rowNum) -> 
 		new Degree(rs.getString("dcode"), rs.getString("name"), rs.getInt("unit"))).forEach(degree -> degrees.add(degree));
 		DegreeNameWrapper dnw = new DegreeNameWrapper(degrees);
 		return dnw;

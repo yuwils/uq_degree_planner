@@ -80,7 +80,7 @@ const Semester = (props : any) => {
     }, [props.user]);
 
     return (
-        <div onDragEnter = {(e) => onDragEnter(e)} onDragExit = {(e) => onDragExit(e)} onDragOver = {(e) => onDragOver(e)} onDrop = {(e) => onDrop(e)}>
+        <div onDragEnter = {(e) => onDragEnter(e)} onDragLeave = {(e) => onDragExit(e)} onDragExit = {(e) => onDragExit(e)} onDragOver = {(e) => onDragOver(e)} onDrop = {(e) => onDrop(e)}>
             <div className = "semester">
                 {props.sem}
             </div>
