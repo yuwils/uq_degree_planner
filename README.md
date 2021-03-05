@@ -53,5 +53,8 @@ Drag and drop support on mobile devices was enabled using https://github.com/Ber
 ### Lilac Kapul's UQ Info
 The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo
 
+### Josh Comeau's useStickyState hook
+Persistent local storage was partially implemented using the useStickyState hook found at https://www.joshwcomeau.com/react/persisting-react-state-in-localstorage/
+
 ### Bootstrapped with create-react-app
 https://github.com/facebook/create-react-app
