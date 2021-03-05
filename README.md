@@ -23,6 +23,8 @@ First, clone this repo and install Docker Engine and Docker Compose; instruction
 
 Mac and Windows users will require Docker Desktop, while Linux users will require both Docker Engine and Docker Compose.
 
+Before you build the images, you will need to create a .env file in the root directory and set the values for the mysql password and the Spring Boot mysql environmental variable; an example called .envEXAMPLE has been provided.  
+
 Then run these commmands to build and start the docker containers:
 
 `docker-compose build`
