@@ -40,9 +40,9 @@ Note: this will not be very useful without access to the mySql database; you may
 
 * Support for pre-existing credits (e.g high school credits transferring to university or transferring credit from other degrees)
 
-## Not Currently Planned
-
 * Enforcing prerequisites and incompatible classes
+
+* Add warning for overloaded semesters
 
 ### 
 
