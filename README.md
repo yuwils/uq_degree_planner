@@ -1,11 +1,12 @@
 # UQ Degree Planner
 
 A website for planning the courses to be taken over the duration of a degree studied at UQ.
+
 Built on a stack of Typescript, React, Java Spring Boot and mySQL. 
 
 ## Features
 
-* Saves degree plans onto local device without login requirement
+* Saves degree plans onto local device without a login requirement
 * Supports both mobile and desktop 
 * Supports both single and dual degrees
 
