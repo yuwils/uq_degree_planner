@@ -1,6 +1,7 @@
 # UQ Degree Planner
 
 A website for planning the courses to be taken over the duration of a degree studied at UQ.
+Built on a stack of Typescript, React, Java Spring Boot and mySQL. 
 
 ## Features
 
@@ -43,6 +44,8 @@ Note: this will not be very useful without access to the mySql database; you may
 * Enforcing prerequisites and incompatible classes
 
 * Add warning for overloaded semesters
+
+* Refactor code base to use less any types and add additional documentation comments
 
 ### 
 
