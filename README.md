@@ -46,7 +46,7 @@ Note: this will not be very useful without access to the mySql database; you may
 
 * Add warning for overloaded semesters
 
-* Refactor code base to use less any types and add additional documentation comments
+* Refactor code base to use less any types, improve CSS re-usage and add additional documentation comments
 
 ### 
 
