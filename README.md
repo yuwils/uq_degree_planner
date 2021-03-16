@@ -34,7 +34,7 @@ Then run these commmands to build and start the docker containers:
 
 The website should then be available on http://localhost:3000/.
 
-Note: this will not be very useful without access to the mySql database; you may generate your own, or contact wyu17 if you are interested in hosting your own instance. 
+Note: this will not be very useful without access to the mySql database; you may generate your own (see: https://github.com/wyu17/uq_scraper), or contact wyu17 if you are interested in hosting your own instance. 
 
 ## Planned Features
 
@@ -48,6 +48,8 @@ Note: this will not be very useful without access to the mySql database; you may
 
 * Refactor code base to use less any types, improve CSS re-usage and add additional documentation comments
 
+* Fix bug with courses being taken in incorrect semeseters on mobild evices
+
 ### 
 
 ## Credits
@@ -55,7 +57,7 @@ Note: this will not be very useful without access to the mySql database; you may
 Drag and drop support on mobile devices was enabled using https://github.com/Bernardo-Castilho/dragdroptouch
 
 ### Lilac Kapul's UQ Info
-The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo
+The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo (see: https://github.com/wyu17/uq_scraper)
 
 ### Josh Comeau's useStickyState hook
 Persistent local storage was partially implemented using the useStickyState hook found at https://www.joshwcomeau.com/react/persisting-react-state-in-localstorage/
