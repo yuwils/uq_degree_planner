@@ -13,10 +13,10 @@ Built on a stack of Typescript, React, Java Spring Boot and mySQL.
 Currently hosted using Amazon EC2 at https://www.uqdegreeplanner.work/
 
 ## Degree Selection
-![image](https://user-images.githubusercontent.com/62117275/109971603-28c14380-7d42-11eb-87f3-b1d7c3e3c1b4.png)
+![image](https://user-images.githubusercontent.com/62117275/111273865-0ef7f880-8680-11eb-8cfe-d8acd1bd7ae8.png)
 
 ## Course Selection
-![image](https://user-images.githubusercontent.com/62117275/109969855-1d6d1880-7d40-11eb-8d5f-d736124ca5e9.png)
+![image](https://user-images.githubusercontent.com/62117275/111274027-3949b600-8680-11eb-9f99-9bd98993fcfd.png)
 
 ## How to Host
 The easiest method to host your own instance is using the provided docker-compose file.
