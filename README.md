@@ -48,7 +48,7 @@ Note: this will not be very useful without access to the mySql database; you may
 
 * Refactor code base to use less any types, improve CSS re-usage and add additional documentation comments
 
-* Fix bug with courses being taken in incorrect semeseters on mobild evices
+* Fix bug with courses being taken in incorrect semeseters on mobile devices
 
 ### 
 
