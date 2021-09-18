@@ -59,7 +59,7 @@ Note: this will not be very useful without access to the mySql database; you may
 Drag and drop support on mobile devices was enabled using https://github.com/Bernardo-Castilho/dragdroptouch
 
 ### Lilac Kapul's UQ Info
-The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo (see: https://github.com/wyu17/uq_scraper)
+The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo
 
 ### Josh Comeau's useStickyState hook
 Persistent local storage was partially implemented using the useStickyState hook found at https://www.joshwcomeau.com/react/persisting-react-state-in-localstorage/
