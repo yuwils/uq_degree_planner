@@ -4,6 +4,8 @@ A website for planning the courses to be taken over the duration of a degree stu
 
 Built on a stack of Typescript, React, Java Spring Boot and mySQL. 
 
+Note that this repository is outdated compared to the current deployed version. I plan to update this eventually.
+
 ## Features
 
 * Saves degree plans onto local device without a login requirement
