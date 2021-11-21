@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "majors")
 public class Major {
-    '''
+    /**
     Represents information about a major of a degree (major/minor/extended major).
-    '''
+    */
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

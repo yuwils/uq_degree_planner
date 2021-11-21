@@ -4,9 +4,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "degree_constraints")
 public class DegreeConstraint {
-    '''
+    /**
     Represents constraints on a degree.
-    '''
+    */
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

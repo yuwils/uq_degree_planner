@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "degree_options")
 public class DegreeOptions {
-    '''
+    /**
     Represents options for a degree (i.e the number of majors, minors and extended majors).
-    '''
+    */
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

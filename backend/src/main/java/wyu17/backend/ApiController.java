@@ -49,7 +49,7 @@ public class ApiController {
 
 	@GetMapping("/courses")
     public Iterable<Course> getCourses(@RequestParam List<String> codes) {
-        return CourseRepository.findAllById(codes);
+        return CourseRepository.findAllWithCodes(codes);
     }
 
 	@GetMapping("/majors")
@@ -58,15 +58,15 @@ public class ApiController {
 	}
 
 	@GetMapping("/sections")
-	public Iterable<Section> getSections(@RequestParam String dcode, @RequestParam List<String> mcodes) {
-		return SectionRepository.findSectionOfDegreeWithMajors(dcode, mcodes);
+	public Iterable<Section> getSections(@RequestParam List<String> dcodes, @RequestParam List<String> mcodes) {
+		return SectionRepository.findSectionOfDegreeWithMajors(dcodes, mcodes);
 	}
 
 	// Given a degree, major and section gets all the course codes for that section (including alternatives like MATH1051 OR MATH1071)
 	@GetMapping("/sectionCodes")
-	public Iterable<SectionCode> getSectionCodes(@RequestParam String dcode, @RequestParam List<String> mcodes, @RequestParam List<String> sections) {
-		List<SectionCode> withoutOptions = SectionCodeWithoutOptionsRepository.findByDegreeMajorsSections(dcode, mcodes, sections);
-		List<SectionCode> withOptions = SectionCodeWithOptionsRepository.findByDegreeMajorsSections(dcode, mcodes, sections);
+	public Iterable<SectionCode> getSectionCodes(@RequestParam List<String> dcodes, @RequestParam List<String> mcodes, @RequestParam List<String> sections) {
+		List<SectionCode> withoutOptions = SectionCodeWithoutOptionsRepository.findByDegreeMajorsSections(dcodes, mcodes, sections);
+		List<SectionCode> withOptions = SectionCodeWithOptionsRepository.findByDegreeMajorsSections(dcodes, mcodes, sections);
 		List<SectionCode> allCodes = new ArrayList<SectionCode>();
 		allCodes.addAll(withoutOptions);
 		allCodes.addAll(withOptions);

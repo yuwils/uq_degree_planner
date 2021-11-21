@@ -22,6 +22,10 @@ public class SectionCodeWithOptions extends SectionCode implements Serializable 
     public SectionCodeWithOptions() {
     }    
 
+    public String getOptionCode() {
+        return optionCode;
+    }
+
     public Set<Course> getCourses() {
         return courses;
     }

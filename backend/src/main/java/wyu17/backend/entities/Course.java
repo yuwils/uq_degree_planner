@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "courses")
 public class Course {
-    '''
+    /**
     Represents information about a university course.
-    '''
+    */
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;

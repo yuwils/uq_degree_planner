@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "sections")
 public class Section {
-    '''
+    /**
     Represents information about a section of a major.
-    '''
+    */
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -51,5 +51,13 @@ public class Section {
 
     public String getDcode() {
         return major.getDcode();
+    }
+  
+    public Set<SectionCodeWithOptions> getSectionCodesWithOptions() {
+        return sectionCodesWithOptions;
+    }
+
+    public Set<SectionCodeWithoutOptions> getSectionCodesWithoutOptions() {
+        return sectionCodesWithoutOptions;
     }
 }

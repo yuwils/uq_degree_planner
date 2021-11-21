@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "included_degrees")
 public class IncludedDegree {
-    '''
+    /**
     Represents information about a degree.
-    '''
+    */
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
