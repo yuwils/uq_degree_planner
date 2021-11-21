@@ -1,21 +1,19 @@
-import React from 'react';
-import {AppDispatch} from '../reducers/reducers';
-import "./styles/SelectionGridElement.css"
+import './styles/SelectionGridElement.css'
 
 type SelectionGridProps = {
     name: string;
-    onClick: Function;
+    onClick: () => void;
     className: string;
 }
 
 const SelectionGridElement = (props : SelectionGridProps) => {
-    return (
-        <button className = {props.className} onClick = {() => props.onClick()}> 
+  return (
+        <button className = {props.className} onClick = {() => props.onClick()}>
             <span className = "degreeName">
-                {props.name} 
+                {props.name}
             </span>
         </button>
-    )
+  )
 }
 
-export default SelectionGridElement;
+export default SelectionGridElement

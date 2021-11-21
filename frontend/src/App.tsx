@@ -1,15 +1,14 @@
-import React from 'react';
-import './App.css';
-import Display from './components/DisplayWindow';
+import './App.css'
+import Display from './components/DisplayWindow'
 
-function App() {
+function App () {
   return (
     <div className="App">
       <div className = "Headline"> UQ Degree Planner</div>
       <div className = "Display"> <Display /> </div>
       <div className = "Disclaimer"> This website is not affiliated with UQ. Always check the official website. </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

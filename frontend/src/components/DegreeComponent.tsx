@@ -1,6 +1,6 @@
-import { Degree, DegreeConstraint, Major } from '../types/types';
-import MajorComponent from './MajorComponent';
-import ElectiveForm from './ElectiveForm';
+import { Degree, DegreeConstraint, Major } from '../types/types'
+import MajorComponent from './MajorComponent'
+import ElectiveForm from './ElectiveForm'
 import './styles/DegreeWrapper.css'
 
 type DegreeComponentProps = {
@@ -8,7 +8,7 @@ type DegreeComponentProps = {
 }
 
 const DegreeComponent = (props : DegreeComponentProps) => {
-    return (
+  return (
         <div>
             <div className = "degreeName">
                 {props.degree.name}
@@ -22,13 +22,14 @@ const DegreeComponent = (props : DegreeComponentProps) => {
             <div>
                 {props.degree.majorCodes.map((major: Major) => <MajorComponent key = {major.mcode} dcode={props.degree.code} major={major}/>)}
                 {props.degree.minorCodes.map((minor: Major) => <MajorComponent key = {minor.mcode} dcode={props.degree.code} major={minor}/>)}
-                {props.degree.extendedMajorCodes.map((extendedMajor: Major) => <MajorComponent key = {extendedMajor.mcode} dcode={props.degree.code} major={extendedMajor}/>)}
+                {props.degree.extendedMajorCodes.map((extendedMajor: Major) => <MajorComponent key = {extendedMajor.mcode} dcode={props.degree.code} 
+                    major={extendedMajor}/>)}
             </div>
             <div className = "displayElective">
                 <ElectiveForm degree = {props.degree}/>)
             </div>
         </div>
-    )
+  )
 }
 
-export default DegreeComponent;
+export default DegreeComponent

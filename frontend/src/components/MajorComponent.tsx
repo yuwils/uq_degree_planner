@@ -1,5 +1,5 @@
-import SectionComponent from './SectionComponent';
-import { Major, Section } from '../types/types';
+import SectionComponent from './SectionComponent'
+import { Major, Section } from '../types/types'
 import './styles/MajorWrapper.css'
 
 type MajorProps = {
@@ -7,14 +7,14 @@ type MajorProps = {
     major: Major;
 }
 const MajorComponent = (props : MajorProps) => {
-    if (props.major.mcode.includes("CORECO") || props.major.mcode.includes("NOMAJO")) {
-        return (
+  if (props.major.mcode.includes('CORECO') || props.major.mcode.includes('NOMAJO')) {
+    return (
             <div>
-                {props.major.sections.map((section : Section) => <SectionComponent dcode={props.dcode} mcode={props.major.mcode} section={section}/>)}
+                {props.major.sections.map((section : Section) => <SectionComponent key={section.name} dcode={props.dcode} mcode={props.major.mcode} section={section}/>)}
             </div>
-        )
-    } else {
-        return (
+    )
+  } else {
+    return (
             <div>
                 <div className = "majorWrapperName">
                     {props.major.name}
@@ -28,8 +28,8 @@ const MajorComponent = (props : MajorProps) => {
                     )}
                 </div>
             </div>
-        )
-    }
+    )
+  }
 }
 
-export default MajorComponent;
+export default MajorComponent

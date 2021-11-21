@@ -1,36 +1,36 @@
-import { useState } from 'react';
-import { SemesterType, Year } from '../types/types';
-import Semester from './Semester';
-import './styles/Year.css';
-import {addCourseBackToSection, removeYear} from '../reducers/reducers';
-import { useAppDispatch } from '../hooks/hooks';
+import { useState } from 'react'
+import { SemesterType, Year } from '../types/types'
+import Semester from './Semester'
+import './styles/Year.css'
+import { addCourseBackToSection, removeYear } from '../reducers/reducers'
+import { useAppDispatch } from '../hooks/hooks'
 
 type YearComponentProps = {
     year: Year
 }
 
 const YearComponent = (props : YearComponentProps) => {
-    const dispatch = useAppDispatch();
-    const [clicked, setClicked] = useState(true);
+  const dispatch = useAppDispatch()
+  const [clicked, setClicked] = useState(true)
 
-    const yearClickback = () => {
-        setClicked(!clicked);
+  const yearClickback = () => {
+    setClicked(!clicked)
+  }
+
+  const deleteYearCourses = () => {
+    for (const course of props.year.sem1) {
+      dispatch(addCourseBackToSection(course))
     }
-
-    const deleteYearCourses = () => {
-        for (const course of props.year.sem1) {
-            dispatch(addCourseBackToSection(course));
-        }
-        for (const course of props.year.sem2) {
-            dispatch(addCourseBackToSection(course));
-        }
-        for (const course of props.year.sum) {
-            dispatch(addCourseBackToSection(course));
-        }
-        dispatch(removeYear());
+    for (const course of props.year.sem2) {
+      dispatch(addCourseBackToSection(course))
     }
+    for (const course of props.year.sum) {
+      dispatch(addCourseBackToSection(course))
+    }
+    dispatch(removeYear())
+  }
 
-    return (
+  return (
         <div className = "year">
             <button onClick = {yearClickback} className = "yearHeadline">
                 <span className = "yearHeadlineText">
@@ -46,7 +46,7 @@ const YearComponent = (props : YearComponentProps) => {
             </div>}
             {clicked && props.year.finalYear && <button className = "deleteYear" onClick = {deleteYearCourses}> </button>}
         </div>
-    )
+  )
 }
 
-export default YearComponent;
+export default YearComponent

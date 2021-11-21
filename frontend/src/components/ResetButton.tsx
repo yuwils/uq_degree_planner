@@ -1,9 +1,9 @@
-import "./styles/reset.css";
+import './styles/Reset.css'
 
 const ResetButton = () => {
-    return (
+  return (
     <button className = "resetButton"> Reset your plan</button>
-    )
+  )
 }
 
-export default ResetButton;
+export default ResetButton

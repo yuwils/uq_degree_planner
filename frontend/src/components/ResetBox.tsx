@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
-import './styles/ResetBox.css';
+import './styles/ResetBox.css'
 
 type ResetBoxProps = {
     handler: (resetBox: boolean) => void;
 }
 
 const ResetBox = (props : ResetBoxProps) => {
-    return (
+  return (
         <div className = "resetBox">
             <p>
                 Are you sure you want to reset your plan? Your current plan will not be recoverable if it is reset.
@@ -14,11 +13,11 @@ const ResetBox = (props : ResetBoxProps) => {
             <button className = "resetBoxButton" onClick = {() => props.handler(true)}>
                 Yes
             </button>
-            <button className = "resetBoxButton"  onClick = {() => props.handler(false)}>
+            <button className = "resetBoxButton" onClick = {() => props.handler(false)}>
                 No
             </button>
         </div>
-    )
+  )
 }
 
-export default ResetBox;
+export default ResetBox

@@ -7,15 +7,15 @@ enum Page {
 }
 
 enum MajorType {
-    Major="major",
-    Minor="minor",
-    ExtendedMajor="extended_major",
+    Major='major',
+    Minor='minor',
+    ExtendedMajor='extended_major',
 }
 
 enum SemesterType {
-    SemOne="Semester One",
-    SemTwo="Semester Two",
-    SumSem="Summer Semester",
+    SemOne='Semester One',
+    SemTwo='Semester Two',
+    SumSem='Summer Semester',
 }
 
 type DegreeConstraint = {
@@ -99,5 +99,60 @@ type User = {
     sectionsSelected: boolean;
 }
 
-export {Page, MajorType, SemesterType};
-export type {Course, DegreeOption, DegreeConstraint, Degree, Major, Section, SectionCodeWithOptions, SectionCodeWithoutOptions, User, Year};
+// These types don't actually provide true type safety because the API can write anything, but good enough for now
+type SingleDegreesAPI = {
+    dcode: string;
+    name: string;
+    units: number;
+    degreeConstraints: Array<DegreeConstraint>
+}
+
+type MajorAPI = {
+    mcode: string;
+    type: MajorType;
+    name: string;
+    units: number;
+    degreeConstraints: Array<DegreeConstraint>
+}
+
+type CourseAPI = {
+    code: string;
+    title: string;
+    units: number;
+    sem1: boolean;
+    sem2: boolean;
+    sum: boolean;
+    prereq: string;
+    incomp: string;
+}
+
+type SectionCodeWithoutOptionsAPI = {
+    dcode: string;
+    mcode: string;
+    section: string;
+    course: CourseAPI;
+}
+
+type SectionCodeWithOptionsAPI = {
+    dcode: string;
+    mcode: string;
+    section: string;
+    optionCode: string;
+    courses: CourseAPI[];
+}
+
+type SectionDataAPI = {
+    min: number;
+    max: number;
+    dcode: string;
+    mcode: string;
+    sectionName: string;
+    sectionCodesWithOptions: Array<SectionCodeWithOptionsAPI>;
+    sectionCodesWithoutOptions: Array<SectionCodeWithoutOptionsAPI>;
+}
+
+export { Page, MajorType, SemesterType }
+export type {
+  SingleDegreesAPI, MajorAPI, SectionDataAPI, SectionCodeWithOptionsAPI, SectionCodeWithoutOptionsAPI, CourseAPI,
+  Course, DegreeOption, DegreeConstraint, Degree, Major, Section, SectionCodeWithOptions, SectionCodeWithoutOptions, User, Year
+}
