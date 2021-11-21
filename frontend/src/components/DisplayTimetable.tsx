@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import {MajorType, Section, SectionCodeWithOptions, SectionCodeWithoutOptions, Course, Degree, Year} from '../types/Types';
+import {MajorType, Section, SectionCodeWithOptions, SectionCodeWithoutOptions, Course, Degree, Year} from '../types/types';
 import DegreeComponent from './DegreeComponent';
 import YearComponent from './YearComponent';
-import {selectSectionsSelected, selectDegrees, selectYears, addSections, addYear} from '../reducers/UserReducer';
+import {selectSectionsSelected, selectDegrees, toggleSectionsSelected, selectYears, addSections, addYear} from '../reducers/reducers';
 import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import "./styles/DisplayTimetable.css";
 
@@ -86,8 +86,10 @@ const Timetable = () => {
     }
 
     useEffect(() => {
+        // Cache this expensive network call to not reset the users sections every refresh
         if (!sectionsSelected) {
             getSections();
+            dispatch(toggleSectionsSelected());
         }
     }, []);
 

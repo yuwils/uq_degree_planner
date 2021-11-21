@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Section } from '../types/Types';
+import { Section } from '../types/types';
 import SectionCourseComponent from './SectionCourseComponent';
 import OptionedCourseComponent from './OptionedCourseComponent';
 import './styles/Section.css';

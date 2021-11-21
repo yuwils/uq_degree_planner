@@ -1,5 +1,5 @@
 import SectionCourseComponent from './SectionCourseComponent';
-import { Course } from '../types/Types';
+import { Course } from '../types/types';
 import './styles/OptionalCourse.css';
 
 type OptionedCourseProps = {

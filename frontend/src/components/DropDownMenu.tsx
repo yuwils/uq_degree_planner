@@ -1,27 +1,24 @@
 import { useState, useEffect } from 'react';
-import {MajorType, Major} from '../types/Types';
+import {MajorType, Major} from '../types/types';
 import SelectionGridElement from './SelectionGridElement';
-import {selectLastMajors, selectLastMinors, selectLastExtendedMajors, removeMajorCode, addMajor} from '../reducers/UserReducer';
-import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import './styles/DropDownMenu.css'
 
 type DropDownProps = {
-    type: MajorType;
+    majorTypeName: String;
     callback: (major: Major, prevMajorCode: string) => boolean,
     elements: Major[];
 }
 
 const DropDownMenu = (props : DropDownProps) => {
-    const dispatch = useAppDispatch();
-
     // Whether the menu is open or not
     const [clicked, setClicked] = useState<boolean>(false);
     // All the majors for this menu
     const [fullList, setFullList] = useState<Major[]>(props.elements);
     // All the currently selected majors for this menu
     const [currentList, setList] = useState<Major[]>(props.elements);
+
     // What shows on the display menu
-    const [display, setDisplay] = useState<string>("Click to select your " + props.type);
+    const [display, setDisplay] = useState<string>("Click to select your " + props.majorTypeName);
     // The current major code selected on this dropdown
     const [majorCode, setMajorCode] = useState<string>("");
     // Whether a major has been selected on this dropdown
@@ -30,9 +27,9 @@ const DropDownMenu = (props : DropDownProps) => {
     const toggleClicked = () => {
         if (!selected) {
             if (!clicked) {
-                setDisplay("Click to hide these " + props.type + "s");
+                setDisplay("Click to hide these " + props.majorTypeName + "s");
             } else {
-                setDisplay("Click to select your " + props.type);
+                setDisplay("Click to select your " + props.majorTypeName);
             }
         }
         setClicked(!clicked);
@@ -82,7 +79,7 @@ const DropDownMenu = (props : DropDownProps) => {
             <form onSubmit = { handleSubmission }>
                 <label>
                     <input className = "majorForm" type = "text" name = "major" 
-                    placeholder = {"Search for your " + props.type} onChange = { handleChange }/>
+                    placeholder = {"Search for your " + props.majorTypeName} onChange = { handleChange }/>
                 </label>
             </form>
             { currentList.map((major) => <SelectionGridElement key={major.name} className = "majorSelection" name = {major.name} onClick = {() => {

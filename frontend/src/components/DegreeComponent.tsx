@@ -1,4 +1,4 @@
-import { Degree, DegreeConstraint, Major } from '../types/Types';
+import { Degree, DegreeConstraint, Major } from '../types/types';
 import MajorComponent from './MajorComponent';
 import ElectiveForm from './ElectiveForm';
 import './styles/DegreeWrapper.css'

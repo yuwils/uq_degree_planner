@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import {Page, Degree} from '../types/Types';
+import {Page, Degree} from '../types/types';
 import "./styles/RequestDegree.css";
 import SelectionGridElement from "./SelectionGridElement";
-import {addDegree, changePage} from "../reducers/UserReducer";
+import {addDegree, changePage} from "../reducers/reducers";
 import { useAppDispatch } from '../hooks/hooks';
 
 const RequestDegree = () => {

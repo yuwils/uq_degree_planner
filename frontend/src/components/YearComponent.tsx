@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { SemesterType, Year } from '../types/Types';
+import { SemesterType, Year } from '../types/types';
 import Semester from './Semester';
 import './styles/Year.css';
-import {addCourseBackToSection, removeYear} from '../reducers/UserReducer';
+import {addCourseBackToSection, removeYear} from '../reducers/reducers';
 import { useAppDispatch } from '../hooks/hooks';
 
 type YearComponentProps = {

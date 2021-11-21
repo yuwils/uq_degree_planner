@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './styles/Course.css';
-import { Course } from '../types/Types';
+import { Course } from '../types/types';
 
 type SectionCourseProps = {
     course: Course;

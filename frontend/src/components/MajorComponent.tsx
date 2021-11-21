@@ -1,5 +1,5 @@
 import SectionComponent from './SectionComponent';
-import { Major, Section } from '../types/Types';
+import { Major, Section } from '../types/types';
 import './styles/MajorWrapper.css'
 
 type MajorProps = {

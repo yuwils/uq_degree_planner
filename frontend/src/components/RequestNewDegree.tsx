@@ -1,6 +1,6 @@
 import SelectionGridElement from "./SelectionGridElement";
-import {MajorType, Major, Page} from '../types/Types';
-import {selectLastDegree, changePage, addMajor} from '../reducers/UserReducer';
+import {MajorType, Major, Page} from '../types/types';
+import {selectLastDegree, changePage, addMajor} from '../reducers/reducers';
 import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 
 import './styles/RequestNewDegree.css';

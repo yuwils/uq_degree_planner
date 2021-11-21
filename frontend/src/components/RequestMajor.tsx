@@ -1,8 +1,8 @@
 import {useState, useEffect } from 'react';
-import {Page, MajorType, Major} from '../types/Types';
+import {Page, MajorType, Major} from '../types/types';
 import DropDownMenu from './DropDownMenu';
 import SelectionGridElement from './SelectionGridElement';
-import {selectLastDegree, addMajor, changePage} from '../reducers/UserReducer';
+import {selectLastDegree, addMajor, changePage} from '../reducers/reducers';
 import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import './styles/RequestMajor.css';
 
@@ -68,7 +68,8 @@ const RequestMajor = () => {
         let dropdowns: JSX.Element[] = [];
         if (optionNumber) {
             for(let i = 0; i < optionNumber; i++) {
-                dropdowns.push(<DropDownMenu key={i} callback = {dropDownCallback} type = {type} elements = {elements} />)
+                dropdowns.push(<DropDownMenu key={i} callback = {dropDownCallback} 
+                    majorTypeName = {type.toLowerCase().split("_").map(x => x[0].toUpperCase() + x.slice(1)).join(" ")} elements = {elements} />)
             }
         }
         return dropdowns;

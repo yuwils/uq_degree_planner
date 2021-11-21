@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './styles/Course.css';
-import { Course, SemesterType } from '../types/Types';
-import {reduceDegreeUnits, addCourseBackToSection, removeCourseFromYears} from '../reducers/UserReducer';
+import { Course, SemesterType } from '../types/types';
+import {reduceDegreeUnits, addCourseBackToSection, removeCourseFromYears} from '../reducers/reducers';
 import { useAppDispatch } from '../hooks/hooks';
 
 type TimetableCourseProps = {

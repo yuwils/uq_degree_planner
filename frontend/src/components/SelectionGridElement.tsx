@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppDispatch} from '../reducers/UserReducer';
+import {AppDispatch} from '../reducers/reducers';
 import "./styles/SelectionGridElement.css"
 
 type SelectionGridProps = {

@@ -1,8 +1,8 @@
 import {useRef, useState} from 'react';
 import SectionCourseComponent from './SectionCourseComponent';
-import { Degree, Course } from '../types/Types';
+import { Degree, Course } from '../types/types';
 import {useAppDispatch } from '../hooks/hooks';
-import {setElective} from '../reducers/UserReducer';
+import {setElective} from '../reducers/reducers';
 import './styles/ElectiveForm.css';
 
 type ElectiveFormProps = {

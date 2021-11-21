@@ -1,4 +1,4 @@
-import { Page, User, Year, Degree, DegreeOption, SectionCodeWithoutOptions, SemesterType, Major, Section, Course, MajorType } from '../types/Types';
+import { Page, User, Year, Degree, DegreeOption, SectionCodeWithoutOptions, SemesterType, Major, Section, Course, MajorType } from '../types/types';
 import { createStore } from 'redux'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist'

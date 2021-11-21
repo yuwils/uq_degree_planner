@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { SemesterType, Course } from '../types/Types';
+import { SemesterType, Course } from '../types/types';
 import TimetableCourseComponent from './TimetableCourseComponent';
 import { useAppDispatch } from '../hooks/hooks';
-import { addCourseToSemester, removeCourseFromSections } from '../reducers/UserReducer';
+import { addCourseToSemester, removeCourseFromSections } from '../reducers/reducers';
 import './styles/Semester.css';
 
 type SemesterComponentProps = {

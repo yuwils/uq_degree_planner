@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {store, persistor} from './reducers/UserReducer';
+import {store, persistor} from './reducers/reducers';
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import './DragDropTouch';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppSelector, useAppDispatch } from '../hooks/hooks';
-import {selectPage} from '../reducers/UserReducer';
-import {Page} from '../types/Types';
+import {selectPage} from '../reducers/reducers';
+import {Page} from '../types/types';
 import RequestDegree from './RequestDegree';
 import RequestDegreeType from './RequestDegreeType';
 import RequestMajor from './RequestMajor';
@@ -9,7 +9,7 @@ import Timetable from './DisplayTimetable';
 import RequestNewDegree from './RequestNewDegree';
 import ResetButton from './ResetButton';
 import ResetBox from "./ResetBox";
-import {resetState, changePage} from '../reducers/UserReducer';
+import {resetState, changePage} from '../reducers/reducers';
 import './styles/DisplayWindow.css';
 
 const Display = () => {
