@@ -1,42 +1,51 @@
-import React from 'react';
-import Course from './Course';
+import {useRef, useState} from 'react';
+import SectionCourseComponent from './SectionCourseComponent';
+import { Degree, Course } from '../types/Types';
+import {useAppDispatch } from '../hooks/hooks';
+import {setElective} from '../reducers/UserReducer';
 import './styles/ElectiveForm.css';
 
-const ElectiveForm = (props : any) => {
-    const [displayElectiveClass, setDisplayElectiveClass] = React.useState<any>("");
-    const curFormValue = React.useRef("");
+type ElectiveFormProps = {
+    degree: Degree;
+}
 
-    const handleSubmission = (event: any) => {
+const ElectiveForm = (props : ElectiveFormProps) => {
+    const dispatch = useAppDispatch();
+    const [electiveErrorMessage, setElectiveErrorMessage] = useState("");
+    const curFormValue = useRef("");
+
+    const handleSubmission = (event: React.FormEvent) => {
         event.preventDefault();
-        props.electiveHandler(props.dcode, curFormValue.current.toUpperCase());
-        event.target.reset();
+        fetch('http://localhost:8080/courses?codes=' + curFormValue.current.toUpperCase())
+        .then(response => response.json())
+        .then(data => {
+            if(data.length === 0) {
+                setElectiveErrorMessage("This course could not be found");
+                setTimeout(() => {
+                    setElectiveErrorMessage("");
+                }, 1000);
+            } else {
+                const electiveCourse : Course = {
+                    dcode: props.degree.code,
+                    mcode: "ELECTIVE",
+                    name: "ELECTIVE",
+                    ...data[0]
+                };
+                console.log(electiveCourse);
+                dispatch(setElective({dcode: props.degree.code, elective: electiveCourse}));
+            }
+        });
     }
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         curFormValue.current = event.target.value;
     };
 
-    React.useEffect(() => {
-        if (typeof props.elective === 'object' && props.elective.name === "ELECTIVE") {
-            setDisplayElectiveClass((<Course isDraggable = {true} onDragStart = {props.onDragStart} code={props.elective.code} 
-                title={props.elective.title} 
-                units={props.elective.units} sem1={props.elective.sem1} sem2={props.elective.sem2} sum ={props.elective.sum}  prereq ={props.elective.prereq} 
-               incomp ={props.elective.incomp} dcode = {props.dcode} mcode = {"ELECTIVE"} name = {"ELECTIVE"} key = {props.elective.code} /> ));
-        } else if (props.elective === "") {
-            setDisplayElectiveClass("");
-        } else {
-            setDisplayElectiveClass("This course could not be found");
-            setTimeout(() => {
-                setDisplayElectiveClass("");
-            }, 1000);
-        }
-    }, [props.user]);
-
     return (
         <div>
             <div className = "electiveHeadline">
-                {props.dName} Electives:
+                {props.degree.name} Electives:
             </div>
             <div className = "electiveForm">
                 <form onSubmit= {handleSubmission}>
@@ -47,7 +56,8 @@ const ElectiveForm = (props : any) => {
                 </form>
             </div>
             <div className = "electiveResult">
-                {displayElectiveClass}
+                {electiveErrorMessage}
+                {props.degree.elective ? <SectionCourseComponent course= {props.degree.elective} /> : ""}
             </div>
         </div>
     )

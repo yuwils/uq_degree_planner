@@ -1,9 +1,16 @@
 import React from 'react';
+import {AppDispatch} from '../reducers/UserReducer';
 import "./styles/SelectionGridElement.css"
 
-const SelectionGridElement = (props : any) => {
+type SelectionGridProps = {
+    name: string;
+    onClick: Function;
+    className: string;
+}
+
+const SelectionGridElement = (props : SelectionGridProps) => {
     return (
-        <button className = {props.className} onClick = {() => props.onClick(props.user, props.element)}> 
+        <button className = {props.className} onClick = {() => props.onClick()}> 
             <span className = "degreeName">
                 {props.name} 
             </span>

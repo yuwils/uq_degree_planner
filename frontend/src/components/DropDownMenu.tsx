@@ -1,15 +1,31 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {MajorType, Major} from '../types/Types';
 import SelectionGridElement from './SelectionGridElement';
-import User from '../classes/user';
+import {selectLastMajors, selectLastMinors, selectLastExtendedMajors, removeMajorCode, addMajor} from '../reducers/UserReducer';
+import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import './styles/DropDownMenu.css'
 
-const DropDownMenu = (props : any) => {
-    const [clicked, setClicked] = React.useState(false);
-    const [fullList, setFullList] = React.useState([]);
-    const [currentList, setList] = React.useState([]);
-    const [display, setDisplay] = React.useState("Click to select your " + props.type);
-    const [major, setMajor] = React.useState("");
-    const [selected, setSelected] = React.useState(false);
+type DropDownProps = {
+    type: MajorType;
+    callback: (major: Major, prevMajorCode: string) => boolean,
+    elements: Major[];
+}
+
+const DropDownMenu = (props : DropDownProps) => {
+    const dispatch = useAppDispatch();
+
+    // Whether the menu is open or not
+    const [clicked, setClicked] = useState<boolean>(false);
+    // All the majors for this menu
+    const [fullList, setFullList] = useState<Major[]>(props.elements);
+    // All the currently selected majors for this menu
+    const [currentList, setList] = useState<Major[]>(props.elements);
+    // What shows on the display menu
+    const [display, setDisplay] = useState<string>("Click to select your " + props.type);
+    // The current major code selected on this dropdown
+    const [majorCode, setMajorCode] = useState<string>("");
+    // Whether a major has been selected on this dropdown
+    const [selected, setSelected] = useState<boolean>(false);
 
     const toggleClicked = () => {
         if (!selected) {
@@ -22,49 +38,31 @@ const DropDownMenu = (props : any) => {
         setClicked(!clicked);
     };
 
-    const searchMajors = (fullList : any, search : string) => {
-        let lowerCaseSearch : string = search.toLowerCase();
-        let newDegreeGrid = [];
-        console.log(fullList);
-        for (let i = 0; i < fullList.length; i++) {
-            let degreeName: string = fullList[i].name.toLowerCase();
-            if (degreeName.includes(lowerCaseSearch)) {
-                newDegreeGrid.push(<SelectionGridElement className = "majorSelection" user = {props.user} onClick = { handleClickBack } 
-                name = {props.elements[i].name} element = {props.elements[i]} />);
+    const searchMajors = (fullList : Major[], search : string) => {
+        let lowerCaseSearch = search.toLowerCase();
+        let newDegreeGrid : Major[] = [];
+        for (const major of fullList) {
+            let majorName: string = major.name.toLowerCase();
+            if (majorName.includes(lowerCaseSearch)) {
+                newDegreeGrid.push(major);
             }
         }
         return newDegreeGrid;
     }
 
-    const handleSubmission = (event: any) => {
+    const handleSubmission = (event: React.FormEvent) => {
         event.preventDefault();
     }
 
-    const handleChange = (event: any) => {
-        let newDegrees: any = searchMajors(fullList, event.target.value);
-        setList(newDegrees);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let selectedMajors: Major[] = searchMajors(fullList, event.target.value);
+        setList(selectedMajors);
     };
 
-    const handleClickBack = (user : User, majorDetails : any) => {
-        let currentMajor = major;
-        let exists = props.handler(user, currentMajor, majorDetails.code, majorDetails.name, majorDetails.units, props.type);
-        if (exists) {
-            setDisplay(majorDetails.name);
-            setMajor(majorDetails.code);
-            setSelected(true);
-            setClicked(false);
-        }
-    }
-
-    useEffect(() => { 
-        let nfullList : any = [];
-        for (let i = 0; i < props.elements.length; i++) {
-            nfullList.push(<SelectionGridElement className = "majorSelection" user = {props.user} onClick = { handleClickBack } 
-            name = {props.elements[i].name} element = {props.elements[i]}/>)
-        }
+    useEffect(() => {
         setFullList(props.elements);
-        setList(nfullList);
-    }, [props]);
+        setList(props.elements);
+    }, [props.elements]);
 
     if (!clicked) {
         return (
@@ -87,7 +85,15 @@ const DropDownMenu = (props : any) => {
                     placeholder = {"Search for your " + props.type} onChange = { handleChange }/>
                 </label>
             </form>
-            { currentList }
+            { currentList.map((major) => <SelectionGridElement key={major.name} className = "majorSelection" name = {major.name} onClick = {() => {
+                const success = props.callback(major, majorCode);
+                if (success) {
+                    setDisplay(major.name);
+                    setMajorCode(major.mcode);
+                    setSelected(true);
+                    setClicked(false);
+                }
+            } }/>) }
             </div>
         </div>
         )

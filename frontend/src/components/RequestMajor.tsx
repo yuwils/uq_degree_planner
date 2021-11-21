@@ -1,70 +1,101 @@
-import React, { useEffect } from 'react';
+import {useState, useEffect } from 'react';
+import {Page, MajorType, Major} from '../types/Types';
 import DropDownMenu from './DropDownMenu';
 import SelectionGridElement from './SelectionGridElement';
-import User from '../classes/user';
+import {selectLastDegree, addMajor, changePage} from '../reducers/UserReducer';
+import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import './styles/RequestMajor.css';
 
-const RequestMajor = (props: any) => {
-    const [majorButtonGrid, setMajorButtonGrid] = React.useState([]);
-    const [minorButtonGrid, setMinorButtonGrid] = React.useState([]);
-    const [emajorButtonGrid, setEMajorButtonGrid] = React.useState([]);
+const RequestMajor = () => {
+    const dispatch = useAppDispatch();
+    const userDegree = useAppSelector(selectLastDegree);
 
-    const majors = () => {
-        let newButtonGrid : any = [];
-        if (props.user.degrees[props.user.degrees.length - 1].majors > 0) {
-            fetch('http://localhost:8080/majors?code=' + props.user.degrees[props.user.degrees.length -1].code.toString() + "&type=major").then(
-                response => response.json()).then(data => {
-                    let degrees : any = data.degrees;
-                    for (let i = 0; i < props.user.degrees[props.user.degrees.length - 1].majors; i++) {
-                        newButtonGrid.push(<DropDownMenu type = "Major" handler = {props.handler} user = {props.user} elements = {degrees} />);
-                    }
-                    setMajorButtonGrid(newButtonGrid);
-            });
-        }
-    }
+    const [majors, setMajors] = useState<Major[]>([]);
+    const [minors, setMinors] = useState<Major[]>([]);
+    const [extendedMajors, setExtendedMajors] = useState<Major[]>([]);
 
-    const minors = () => {
-        let newButtonGrid : any = [];
-        if (props.user.degrees[props.user.degrees.length - 1].minors > 0) {
-            fetch('http://localhost:8080/majors?code=' + props.user.degrees[props.user.degrees.length -1].code.toString() + "&type=minor").then(
-                response => response.json()).then(data => {
-                    let degrees : any = data.degrees;
-                    for (let i = 0; i < props.user.degrees[props.user.degrees.length - 1].minors; i++) {
-                        newButtonGrid.push(<DropDownMenu type = "Minor" handler = {props.handler} user = {props.user} elements = {degrees} />);
-                    }
-                    setMinorButtonGrid(newButtonGrid);
-                });
-        }
-    }
+    const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
+    const [selectedMinors, setSelectedMinors] = useState<Major[]>([]);
+    const [selectedExtendedMajors, setSelectedExtendedMajors] = useState<Major[]>([]);
 
-    const emajors = () => {
-        let newButtonGrid : any = [];
-        if (props.user.degrees[props.user.degrees.length - 1].emaj > 0) {
-            fetch('http://localhost:8080/majors?code=' + props.user.degrees[props.user.degrees.length -1].code.toString() + "&type=eMajor").then(
-                response => response.json()).then(data => {
-                    let degrees : any = data.degrees;
-                    for (let i = 0; i < props.user.degrees[props.user.degrees.length - 1].emaj; i++) {
-                        newButtonGrid.push(<DropDownMenu type = "Extended Major" handler = {props.handler} user = {props.user} elements = {degrees} />)
+    const getMajors = () => {
+        fetch('http://localhost:8080/majors?dcode=' + userDegree?.code.toString()).then(
+            response => response.json()).then(data => {
+                const majors : Major[] = [];
+                const minors : Major[] = [];
+                const extendedMajors : Major[] = [];
+                data.forEach((x : any) => {
+                    const major: Major = {
+                        mcode: x.mcode,
+                        type: x.type,
+                        name: x.name,
+                        units: x.units,
+                        sections: [],
+                        currentUnits: 0,
+                    };
+                    if (major.type == MajorType.Major) {
+                        majors.push(major);
+                    } else if (major.type == MajorType.Minor) {
+                        minors.push(major);
+                    } else if (major.type == MajorType.ExtendedMajor) {
+                        extendedMajors.push(major);
                     }
-                    setEMajorButtonGrid(newButtonGrid);
-                });
-        }
+                })
+                setMajors(majors);
+                setMinors(minors);
+                setExtendedMajors(extendedMajors);
+        });
     }
 
     useEffect(() => { 
-        majors();
-        minors();
-        emajors();
-    }, [props]);
+        getMajors();
+    }, []);
+
+    const dropDownCallback = (major: Major, prevMajorCode : string) => {
+        if (major.type === MajorType.Major && !selectedMajors.some(existingMajor => existingMajor.mcode === major.mcode)) {
+            setSelectedMajors(selectedMajors.filter(major => major.mcode !== prevMajorCode).concat([major]));
+        } else if (major.type === MajorType.Minor && !selectedMinors.some(existingMajor => existingMajor.mcode === major.mcode)) {
+            setSelectedMinors(selectedMinors.filter(minor => minor.mcode !== prevMajorCode).concat([major]));
+        } else if (major.type === MajorType.ExtendedMajor && !selectedExtendedMajors.some(existingMajor => existingMajor.mcode === major.mcode)) {
+            setSelectedExtendedMajors(selectedExtendedMajors.filter(extendedMajor => extendedMajor.mcode !== prevMajorCode).concat([major]));
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    const generateDropDowns = (elements: Major[], type: MajorType, optionNumber: number | undefined) => {
+        let dropdowns: JSX.Element[] = [];
+        if (optionNumber) {
+            for(let i = 0; i < optionNumber; i++) {
+                dropdowns.push(<DropDownMenu key={i} callback = {dropDownCallback} type = {type} elements = {elements} />)
+            }
+        }
+        return dropdowns;
+    }
 
     return (
         <div className = "buttonGrid">
             <div className = "buttonGridWrapper">
-                {majorButtonGrid}
-                {minorButtonGrid}
-                {emajorButtonGrid}
-                <SelectionGridElement className = "majorSelection" user = {props.user} onClick = { props.handler2 } 
-                    name = {"Continue"} element = {""}/>
+                {generateDropDowns(majors, MajorType.Major, userDegree?.degreeOption?.majors)}
+                {generateDropDowns(minors, MajorType.Minor, userDegree?.degreeOption?.minors)}
+                {generateDropDowns(extendedMajors, MajorType.ExtendedMajor, userDegree?.degreeOption?.extendedMajors)}
+                <SelectionGridElement className = "majorSelection" onClick = {() => {
+                    if (selectedMinors.length == userDegree?.degreeOption?.minors &&
+                        selectedMajors.length == userDegree?.degreeOption?.majors &&
+                        selectedExtendedMajors.length == userDegree?.degreeOption?.extendedMajors) {
+                        for (const major of selectedMajors) {
+                            dispatch(addMajor({unshift: false, major: major}));
+                        }
+                        for (const major of selectedMinors) {
+                            dispatch(addMajor({unshift: false, major: major}));
+                        }
+                        for (const major of selectedExtendedMajors) {
+                            dispatch(addMajor({unshift: false, major: major}));
+                        }
+                        dispatch(changePage(Page.RequestNewDegree));
+                    }
+                } } name = {"Continue"}/>
             </div>
         </div>
     )

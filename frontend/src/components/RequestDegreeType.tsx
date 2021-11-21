@@ -1,45 +1,35 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {Page, DegreeOption} from '../types/Types';
 import SelectionGridElement from "./SelectionGridElement";
+import {selectLastDegree, addDegreeOption, changePage} from '../reducers/UserReducer';
+import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import "./styles/RequestDegreeType.css";
 
-const RequestDegreeType = (props: any) => {
-    const [majorGrid, setMajorGrid] = React.useState([]);
+const RequestDegreeType = () => {
+    const userLastDegree = useAppSelector(selectLastDegree);
+    const dispatch = useAppDispatch();
+    const [degreeOptions, setDegreeOptions] = useState<DegreeOption[]>([]);
 
-    const setMajorHelper = (degrees: any) => {
-        let majorGrid : any = [];
-        for (let i = 0; i < degrees.length; i++) {
-            let majorText : string, minorText : string, emajText :string;
-            if (degrees[i].majors > 0) {
-                majorText = "Majors: " + degrees[i].majors.toString() + " ";
-            } else {
-                majorText = "";
-            }
-            if (degrees[i].minors > 0) {
-                minorText = "Minors: " + degrees[i].minors.toString() + " ";
-            } else {
-                minorText = "";
-            }
-            if (degrees[i].emajors > 0) {
-                emajText = "Extended Majors: " + degrees[i].emajors.toString();
-            } else {
-                emajText = "";
-            }
-            let name1 : string = majorText + minorText + emajText;
-            if (name1 === "") {
-                name1 = "No Major";
-            }
-            majorGrid.push(<SelectionGridElement className = "SelectionGridElement" user = {props.user} onClick = { props.handler } 
-            name = {name1} element = {degrees[i]} />);
-        }
-        return majorGrid;
+    const degreeOptionButtonText = (degreeOption: DegreeOption) => {
+        const majorText = degreeOption.majors ? "Majors: " + degreeOption.majors.toString() + " " : "";
+        const minorText = degreeOption.minors ? "Minors: " + degreeOption.minors.toString() + " " : "";
+        const extendedMajorText = degreeOption.extendedMajors ? "Extended Majors: " + degreeOption.extendedMajors.toString() + " " : "";
+        const buttonText = majorText + minorText + extendedMajorText ? majorText + minorText + extendedMajorText : "No Major";
+        return buttonText;
     };
 
     useEffect(() => { 
-        fetch('http://localhost:8080/degreeStructures?code=' + props.user.degrees[props.user.degrees.length -1].code.toString()).then(
+        fetch('http://localhost:8080/degreeOptions?code=' + userLastDegree?.code).then(
             response => response.json()).then(data => {
-            console.log(props.user.degrees[props.user.degrees.length -1].code.toString());
-            let degrees : any = setMajorHelper(data.degrees);
-            setMajorGrid(degrees)
+            const degreeOptions = data.map((x : any) => {
+                const degreeOption: DegreeOption = {
+                    majors: x.majors,
+                    minors: x.minors,
+                    extendedMajors: x.extendedMajors,
+                };
+                return degreeOption;
+            });
+            setDegreeOptions(degreeOptions);
         });
     }, []);
 
@@ -49,7 +39,16 @@ const RequestDegreeType = (props: any) => {
                 Select Your Degree Type
             </div>
             <div className = "RequestDegreeWrapper">
-                {majorGrid}
+                {degreeOptions.map((degreeOption) => <SelectionGridElement key={degreeOptionButtonText(degreeOption)} className = "SelectionGridElement" 
+                    name = {degreeOptionButtonText(degreeOption)} 
+                    onClick = {() => {
+                        dispatch(addDegreeOption(degreeOption));
+                        if (degreeOption.majors == 0 && degreeOption.minors == 0 && degreeOption.extendedMajors == 0) {
+                            dispatch(changePage(Page.RequestNewDegree))
+                        } else {
+                            dispatch(changePage(Page.RequestMajor)); 
+                        }
+                    }}/>)}
             </div>
         </div>
     )

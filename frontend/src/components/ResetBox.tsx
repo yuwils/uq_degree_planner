@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import './styles/ResetBox.css';
 
-const ResetBox = (props : any) => {
+type ResetBoxProps = {
+    handler: (resetBox: boolean) => void;
+}
+
+const ResetBox = (props : ResetBoxProps) => {
     return (
         <div className = "resetBox">
             <p>
