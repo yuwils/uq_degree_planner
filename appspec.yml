@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: .
+    destination: /home/uq-degree-planner/
+hooks:
+  ApplicationStart:
+   - location: run.sh
+     timeout: 300
+     runas: root
