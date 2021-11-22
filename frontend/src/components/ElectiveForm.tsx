@@ -31,7 +31,6 @@ const ElectiveForm = (props : ElectiveFormProps) => {
             name: 'ELECTIVE',
             ...data[0]
           }
-          console.log(electiveCourse)
           dispatch(setElective({ dcode: props.degree.code, elective: electiveCourse }))
         }
       })

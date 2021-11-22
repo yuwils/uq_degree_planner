@@ -107,7 +107,6 @@ test('deleteFromTimetable', () => {
   const newState1 = reducer(exampleUser, removeCourseFromYears({ yearId: 1, semester: SemesterType.SemOne, course: { code: 'TEST1401', ...testCourse } }))
   const newState = reducer(newState1, addCourseBackToSection({ code: 'TEST1401', ...testCourse }))
 
-  console.log(newState.degrees[0].majorCodes[0].sections[0].sectionCodesWithoutOptions)
   expect(newState.degrees[0].majorCodes[0].sections[0].sectionCodesWithoutOptions).toEqual([{ course: { code: 'TEST1501', ...testCourse } },
     { course: { code: 'TEST1401', ...testCourse } }])
   expect(newState.years[0].sem1).toEqual([])

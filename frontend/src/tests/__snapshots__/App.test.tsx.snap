@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render home screen 1`] = `
+<div
+  className="App"
+>
+  <div
+    className="Headline"
+  >
+     UQ Degree Planner
+  </div>
+  <div
+    className="Display"
+  >
+     
+    <div
+      className="Display"
+    >
+      <div
+        className="InnerDisplay"
+      >
+         
+        <div
+          className="RequestDegree"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <label>
+              <input
+                className="degreeForm"
+                name="degree"
+                onChange={[Function]}
+                placeholder="Search for your degree (e.g Science, Arts, Engineering)"
+                type="text"
+                value=""
+              />
+            </label>
+          </form>
+          <div
+            className="DegreeGrid"
+          />
+        </div>
+         
+      </div>
+      <div
+        className="ResetButton"
+        onClick={[Function]}
+      >
+         
+        <button
+          className="resetButton"
+        >
+           Reset your plan
+        </button>
+         
+      </div>
+    </div>
+     
+  </div>
+  <div
+    className="Disclaimer"
+  >
+     This website is not affiliated with the University of Queensland. Always check the official website. 
+  </div>
+</div>
+`;
+
+exports[`render timetable 1`] = `
+<div
+  className="sectionContainer"
+>
+  <div
+    className="sections"
+  />
+  <div
+    className="sem-drop-zone"
+  >
+    <button
+      className="addYearButton"
+      onClick={[Function]}
+    >
+      Add Additional Year
+    </button>
+  </div>
+</div>
+`;

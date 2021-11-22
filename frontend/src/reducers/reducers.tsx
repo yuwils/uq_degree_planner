@@ -151,7 +151,6 @@ const userSlice = createSlice({
     },
     removeCourseFromSections: (state, action: PayloadAction<Course>) => {
       const degree = state.degrees.find(degree => degree.code === action.payload.dcode)
-      console.log(action.payload)
       if (degree && action.payload.mcode === 'ELECTIVE') {
         degree.elective = undefined
         degree.currentUnits += action.payload.units
