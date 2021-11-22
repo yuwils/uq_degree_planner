@@ -37,7 +37,7 @@ const baseCourse = {
 const testCourse = {
   mcode: 'major',
   name: 'testSection',
-  ...baseCourse,
+  ...baseCourse
 }
 
 const exampleSection : Section = {
@@ -146,14 +146,14 @@ test('testOptionedWorkflow', () => {
 
 // Test adding an elective
 test('electiveWorkflow', () => {
-    const elective = {code:"TEST2401", mcode: "ELECTIVE", name: "ELECTIVE", ...baseCourse};
-    const addedElective = reducer(exampleUser, setElective({dcode: "testCode", elective:elective}));
-    const addCourseSem = reducer(addedElective, addCourseToSemester({yearId: 1, semester: SemesterType.SemTwo, course: elective}));
-    const removeCourseSect = reducer(addCourseSem, removeCourseFromSections(elective));
+  const elective = { code: 'TEST2401', mcode: 'ELECTIVE', name: 'ELECTIVE', ...baseCourse }
+  const addedElective = reducer(exampleUser, setElective({ dcode: 'testCode', elective: elective }))
+  const addCourseSem = reducer(addedElective, addCourseToSemester({ yearId: 1, semester: SemesterType.SemTwo, course: elective }))
+  const removeCourseSect = reducer(addCourseSem, removeCourseFromSections(elective))
 
-    expect(removeCourseSect.years[0].sem2).toEqual([elective])
-    expect(removeCourseSect.degrees[0].currentUnits).toBe(4);
-    expect(removeCourseSect.degrees[0].elective).toBe(undefined);
-    expect(removeCourseSect.degrees[0].majorCodes[0].currentUnits).toBe(2);
-    expect(removeCourseSect.degrees[0].majorCodes[0].sections[0].currentUnits).toBe(2);
+  expect(removeCourseSect.years[0].sem2).toEqual([elective])
+  expect(removeCourseSect.degrees[0].currentUnits).toBe(4)
+  expect(removeCourseSect.degrees[0].elective).toBe(undefined)
+  expect(removeCourseSect.degrees[0].majorCodes[0].currentUnits).toBe(2)
+  expect(removeCourseSect.degrees[0].majorCodes[0].sections[0].currentUnits).toBe(2)
 })

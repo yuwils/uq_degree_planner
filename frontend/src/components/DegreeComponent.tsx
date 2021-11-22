@@ -22,7 +22,7 @@ const DegreeComponent = (props : DegreeComponentProps) => {
             <div>
                 {props.degree.majorCodes.map((major: Major) => <MajorComponent key = {major.mcode} dcode={props.degree.code} major={major}/>)}
                 {props.degree.minorCodes.map((minor: Major) => <MajorComponent key = {minor.mcode} dcode={props.degree.code} major={minor}/>)}
-                {props.degree.extendedMajorCodes.map((extendedMajor: Major) => <MajorComponent key = {extendedMajor.mcode} dcode={props.degree.code} 
+                {props.degree.extendedMajorCodes.map((extendedMajor: Major) => <MajorComponent key = {extendedMajor.mcode} dcode={props.degree.code}
                     major={extendedMajor}/>)}
             </div>
             <div className = "displayElective">
