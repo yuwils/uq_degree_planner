@@ -1,2 +1,2 @@
-cd /home/uq-degree-planner/
-sudo docker-compose up -d
+cd /home/ec2-user/uq_degree_planner/
+docker-compose up -d --build
