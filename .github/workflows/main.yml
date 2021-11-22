@@ -21,7 +21,6 @@ jobs:
         run: npm run test
  
       - name: Set up Java 11
-        working-directory: backend
         uses: actions/setup-java@v2
         with:
           java-version: '11'
