@@ -2,12 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: .
-    destination: /home/ec2-user/uq-degree-planner/
+    destination: /home/ec2-user/uq_degree_planner/
 hooks:
-  ApplicationStop:
-    - location: stop.sh
-      timeout: 2000
-      runas: root
+  # ApplicationStop:
+  #   - location: stop.sh
+  #     timeout: 2000
+  #     runas: root
 
   ApplicationStart:
     - location: run.sh
