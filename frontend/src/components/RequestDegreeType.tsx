@@ -20,7 +20,7 @@ const RequestDegreeType = () => {
 
   useEffect(() => {
     // This API call returns a list of DegreeOptions
-    fetch('http://localhost:8080/degreeOptions?code=' + userLastDegree?.code).then(
+    fetch('/degreeOptions?code=' + userLastDegree?.code).then(
       response => response.json()).then(data => setDegreeOptions(data))
   }, [])
 

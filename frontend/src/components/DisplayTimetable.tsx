@@ -67,7 +67,7 @@ const Timetable = () => {
         degree.extendedMajorCodes.map(major => major.mcode))
     }).flat()
 
-    const sectionResponse = await fetch('http://localhost:8080/sections?dcodes=' + allDegreeCodes + '&mcodes=' + allMajorCodes)
+    const sectionResponse = await fetch('/sections?dcodes=' + allDegreeCodes + '&mcodes=' + allMajorCodes)
     const sectionData = await sectionResponse.json()
 
     // For each major, minor and extended major for each degree

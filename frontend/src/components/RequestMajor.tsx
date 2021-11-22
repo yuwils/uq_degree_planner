@@ -19,7 +19,7 @@ const RequestMajor = () => {
   const [selectedExtendedMajors, setSelectedExtendedMajors] = useState<Major[]>([])
 
   const getMajors = () => {
-    fetch('http://localhost:8080/majors?dcode=' + userDegree?.code.toString()).then(
+    fetch('/majors?dcode=' + userDegree?.code.toString()).then(
       response => response.json()).then(data => {
       const majors : Major[] = []
       const minors : Major[] = []

@@ -25,7 +25,7 @@ const RequestDegree = () => {
   }
 
   useEffect(() => {
-    fetch('http://localhost:8080/singleDegrees').then(response => response.json()).then(data => {
+    fetch('/singleDegrees').then(response => response.json()).then(data => {
       const degrees = data.map((x : SingleDegreesAPI) => {
         const degree: Degree = {
           code: x.dcode,

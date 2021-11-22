@@ -16,7 +16,7 @@ const ElectiveForm = (props : ElectiveFormProps) => {
 
   const handleSubmission = (event: React.FormEvent) => {
     event.preventDefault()
-    fetch('http://localhost:8080/courses?codes=' + curFormValue.current.toUpperCase())
+    fetch('/courses?codes=' + curFormValue.current.toUpperCase())
       .then(response => response.json())
       .then(data => {
         if (data.length === 0) {
