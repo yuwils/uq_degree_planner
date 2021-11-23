@@ -1,58 +1,61 @@
 # UQ Degree Planner
 
-A website for planning the courses to be taken over the duration of a degree studied at UQ.
+A website for planning the courses to be taken over the duration of a degree studied at UQ. 
 
-Built on a stack of Typescript, React, Java Spring Boot and mySQL. 
+Built on a stack of Typescript, React and Redux on the front-end, Java Spring Boot and Hibernate for the back-end, and mySQL as the database. 
 
-Note that this repository is outdated compared to the current deployed version. I plan to update this eventually.
+AWS has been used to deploy the application: an EC2 instance has been used to host a docker container containing the website, and RDS has been used for hosting the database.
+
+Additionally, this project features an end-to-end CI/CD pipeline, including front end linting and tests for both the front and back end, that was developed using Github Actions, ECR and AWS CodeDeploy. 
+
+You can access the deployed website at [uqdegreeplanner.work](https://www.uqdegreeplanner.work/).
 
 ## Features
 
-* Saves degree plans onto local device without a login requirement
-* Supports both mobile and desktop 
-* Supports both single and dual degrees
-
-Currently hosted using Amazon EC2 at https://www.uqdegreeplanner.work/
+* Ability to select degrees to be taken, including any majors/minors/extended majors
+* Calculates the courses that need to be taken for each degree and major 
+* Provides an interface for planning the year and semester to take each course in
+* Saves degree plans onto local device without needing to log in
+* Supports both mobile and desktop usage
 
 ## Degree Selection
 ![image](https://user-images.githubusercontent.com/62117275/111273865-0ef7f880-8680-11eb-8cfe-d8acd1bd7ae8.png)
 
+## Major Selection
+![image](https://user-images.githubusercontent.com/62117275/143033469-25b96c8e-1acc-4846-b0bf-9ea44f38a2a5.png)
+
 ## Course Selection
-![image](https://user-images.githubusercontent.com/62117275/111274027-3949b600-8680-11eb-9f99-9bd98993fcfd.png)
+![image](https://user-images.githubusercontent.com/62117275/143009806-431a5236-90be-4abc-a7a4-4ef44cae0d50.png)
 
-## How to Host
-The easiest method to host your own instance is using the provided docker-compose file.
+## Running Locally
+The easiest method to build your own instance will be to use the provided dockerfile: see https://docs.docker.com/get-docker/ for how to install Docker if you do not already have it installed.
 
-First, clone this repo and install Docker Engine and Docker Compose; instructions can be found here: https://docs.docker.com.
+To build the image from the root directory of the repository, you can use 
 
-Mac and Windows users will require Docker Desktop, while Linux users will require both Docker Engine and Docker Compose.
+```
+docker build -t uq_degree_planner .
+```
 
-Before you build the images, you will need to create a .env file in the root directory and set the values for the mysql password and the Spring Boot mysql environmental variable; an example called .envEXAMPLE has been provided.  
+or a tag of your choice.
 
-Then run these commmands to build and start the docker containers:
+To run the container you will need to provide it three environment variables. 
+```
+SPRING_DATASOURCE_URL: An URL to a mySQL database. 
+SPRING_DATASOURCE_USERNAME: The mySQL username.
+SPRING_DATASOURCE_PASSWORD: The mySQL password.
+```
+This is most easily achieved by using a .env file: see the .envEXAMPLE file in the root directory.
 
-`docker-compose build`
-`docker-compose up`
+You can then run the container by using
+```
+docker run -d --env-file .env --net=host uq_degree_planner:latest
+```
+Note that host networking has been used (to facilitate the external database link), so port 8080 should ideally be currently unused. 
 
-The website should then be available on http://localhost:3000/.
+The website should then be available on http://localhost:8080/.
 
-Note: this will not be very useful without access to the mySql database; you may generate your own (see: https://github.com/wyu17/uq_scraper), or contact wyu17 if you are interested in hosting your own instance. 
+Note that this is unlikely to be very useful without access to a populated mySQL database as there will be no data to populate the website with; contact wyu17 if you are interested in hosting your own instance. 
 
-## Planned Features
-
-* Support for a greater range of degrees
-
-* Support for pre-existing credits (e.g high school credits transferring to university or transferring credit from other degrees)
-
-* Enforcing prerequisites and incompatible classes
-
-* Add warning for overloaded semesters
-
-* Refactor code base to use less any types, improve CSS re-usage and add additional documentation comments
-
-* Fix bug with courses being taken in incorrect semesters on mobile devices
-
-* Implement a testing framework for improved reliability
 
 ### 
 
@@ -62,9 +65,6 @@ Drag and drop support on mobile devices was enabled using https://github.com/Ber
 
 ### Lilac Kapul's UQ Info
 The scripts used to populate the database were adapted from https://github.com/liilac/uqinfo
-
-### Josh Comeau's useStickyState hook
-Persistent local storage was partially implemented using the useStickyState hook found at https://www.joshwcomeau.com/react/persisting-react-state-in-localstorage/
 
 ### Bootstrapped with create-react-app
 https://github.com/facebook/create-react-app
