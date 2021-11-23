@@ -12,8 +12,8 @@
                     "containerPort": 8080
                 }
             ],
-            "cpu": 1,
-            "memory": 1024,
+            "cpu": 1024,
+            "memory": 700,
             "name": "uq_degree_planner",
             "environment": [
                 {
