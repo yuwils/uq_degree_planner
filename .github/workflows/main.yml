@@ -68,7 +68,7 @@ jobs:
 
       - name: Add secrets to Task Definition
         run: |
-          sed -i "s|<url_secret>|a/b/c|g" task.json 
+          sed -i "s|<url_secret>|$URL_SECRET|g" task.json 
           sed -i "s|<username_secret>|$USERNAME_SECRET|g" task.json
           sed -i "s|<password_secret>|$PASSWORD_SECRET|g" task.json 
         env:
