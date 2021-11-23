@@ -4,6 +4,11 @@ files:
   - source: .
     destination: /home/ec2-user/uq_degree_planner/
 hooks:
+  ApplicationStop:
+    - location: stop.sh
+      timeout: 3600
+      runas: root
+
   ApplicationStart:
     - location: run.sh
       timeout: 3600

@@ -53,41 +53,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Public ECR auth
-        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: public.ecr.aws/r8i2f5k8
-          IMAGE_TAG: ${{ github.sha }}
+      - name: Deploy
+        id: deploy
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
-      - name: Add secrets to Task Definition
-        run: |
-          sed -i "s|<url_secret>|$URL_SECRET|g" task.json 
-          sed -i "s|<username_secret>|$USERNAME_SECRET|g" task.json
-          sed -i "s|<password_secret>|$PASSWORD_SECRET|g" task.json 
-        env:
-          URL_SECRET: ${{ secrets.URL_SECRET }}
-          USERNAME_SECRET: ${{ secrets.USERNAME_SECRET }}
-          PASSWORD_SECRET: ${{ secrets.PASSWORD_SECRET }}
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+          aws deploy create-deployment \
+            --application-name uq_degree_planner \
+            --deployment-group-name planner_deployment_group \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
