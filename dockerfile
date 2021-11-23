@@ -10,7 +10,7 @@ RUN mkdir src
 COPY ./backend /src
 COPY --from=build /app/build /src/src/main/resources/static
 WORKDIR /src
-RUN ./mvnw clean install package
+RUN ./mvnw -B clean install package
 
 FROM openjdk:11-jdk
 RUN addgroup -system spring && useradd -G spring user
