@@ -73,7 +73,7 @@ jobs:
           sed -i "s/<username_secret>/$USERNAME_SECRET/g" task.json
           sed -i "s/<password_secret>/$PASSWORD_SECRET/g" task.json 
         env:
-          URL_SECRET: ${{s ecrets.URL_SECRET }}
+          URL_SECRET: ${{ secrets.URL_SECRET }}
           USERNAME_SECRET: ${{ secrets.USERNAME_SECRET }}
           PASSWORD_SECRET: ${{ secrets.PASSWORD_SECRET }}
 
