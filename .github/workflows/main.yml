@@ -55,6 +55,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: public.ecr.aws/r8i2f5k8
+          ECR_REPOSITORY: uq_degree_planner
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
