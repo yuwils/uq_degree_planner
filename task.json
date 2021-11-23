@@ -1,0 +1,42 @@
+{
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "inferenceAccelerators": [],
+    "containerDefinitions": [
+        {
+            "portMappings": [
+                {
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "containerPort": 8080
+                }
+            ],
+            "cpu": 1,
+            "memory": 1024,
+            "name": "uq_degree_planner",
+            "environment": [
+                {
+                    "name": "SPRING_DATASOURCE_URL",
+                    "value": "<url_secret>"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_USERNAME",
+                    "value": "<username_secret>"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_PASSWORD",
+                    "value": "<password_secret>"
+                }
+            ]
+        }
+    ],
+    "volumes": [],
+    "networkMode": "awsvpc",
+    "memory": null,
+    "cpu": null,
+    "placementConstraints": [],
+    "family": "uq_degree_planner",
+    "taskRoleArn": "",
+    "tags": []
+}

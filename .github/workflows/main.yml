@@ -3,6 +3,14 @@ on:
   push:
     branches: [ main ]
 
+env:
+  AWS_REGION: ap-southeast-2                   
+  ECR_REPOSITORY: uq_degree_planner           
+  ECS_SERVICE: uq-degree-planner-service                 
+  ECS_CLUSTER: uq-degree-planner-cluster                 
+  ECS_TASK_DEFINITION: task.json 
+  CONTAINER_NAME: uq_degree_planner           
+
 jobs:
   continuous-integration:
     runs-on: ubuntu-latest
@@ -26,18 +34,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      # Keep this here in case maven doesn't work on Github Action: see bug with Act
-      # - name: Download Maven
-      #   working-directory: backend
-      #   run: |
-      #     curl -sL https://www-eu.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip -o maven.zip
-      #     apt-get update
-      #     apt-get -y install unzip
-      #     unzip -d /usr/share maven.zip
-      #     rm maven.zip
-      #     ln -s /usr/share/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
-      #     echo "M2_HOME=/usr/share/apache-maven-3.6.3" | tee -a /etc/environment
-
       - name: Junit tests
         working-directory: backend
         run: mvn clean test
@@ -47,17 +43,52 @@ jobs:
     needs: [continuous-integration]
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
-      - name: Deploy
-        id: deploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws deploy create-deployment \
-            --application-name uq_degree_planner \
-            --deployment-group-name planner_deployment_group \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
-            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Add secrets to Task Definition
+        run: |
+          sed -i "s/<url_secret>/$URL_SECRET/g" task.json 
+          sed -i "s/<username_secret>/$USERNAME_SECRET/g" task.json
+          sed -i "s/<password_secret>/$PASSWORD_SECRET/g" task.json 
+        env:
+          URL_SECRET: ${{s ecrets.URL_SECRET }}
+          USERNAME_SECRET: ${{ secrets.USERNAME_SECRET }}
+          PASSWORD_SECRET: ${{ secrets.PASSWORD_SECRET }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
