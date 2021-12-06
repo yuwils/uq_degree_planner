@@ -6,7 +6,7 @@ Built on a stack of Typescript, React and Redux on the front-end, Java Spring Bo
 
 AWS has been used to deploy the application: an EC2 instance has been used to host a docker container containing the website, and RDS has been used for hosting the database.
 
-Additionally, this project features an end-to-end CI/CD pipeline, including front end linting and tests for both the front and back end, that was developed using Github Actions, ECR and AWS CodeDeploy. 
+Additionally, this project features an end-to-end CI/CD pipeline, including front-end linting and tests for both the front and back-end, that was developed using Github Actions, ECR and AWS CodeDeploy. 
 
 You can access the deployed website at [uqdegreeplanner.work](https://www.uqdegreeplanner.work/).
 
